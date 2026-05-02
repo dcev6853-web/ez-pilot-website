@@ -1554,6 +1554,13 @@
     // Get active context pills
     const activePills = Array.from(document.querySelectorAll('.context-pill.active')).map(p=>p.dataset.context).filter(Boolean);
 
+    const escapeHTML = (s) => String(s).replace(/[&<>"']/g, (ch) => (
+      ch === '&' ? '&amp;' :
+      ch === '<' ? '&lt;' :
+      ch === '>' ? '&gt;' :
+      ch === '"' ? '&quot;' : '&#39;'
+    ));
+
     try {
       // Try calling the real backend
       const user = await secureGetJSON('ezp_user');
@@ -1580,14 +1587,14 @@
         const data = await res.json();
         let reply = '<span class="tool-chip">AI generated</span>';
         if (data.pipeline) {
-          reply = '<span class="tool-chip">' + (data.pipeline.modelsUsed || [model]).join(' → ') + '</span>';
+          reply = '<span class="tool-chip">' + (data.pipeline.modelsUsed || [model]).map(escapeHTML).join(' → ') + '</span>';
         }
-        reply += '<br>' + (data.response || data.text || 'Done.').replace(/\n/g, '<br>');
+        reply += '<br>' + escapeHTML(data.response || data.text || 'Done.').replace(/\n/g, '<br>');
 
         // Show pending confirmations
         if (data.pendingConfirmations?.length) {
           for (const pc of data.pendingConfirmations) {
-            reply += '<br><br><span style="background:#fef3c7;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600">⏸ ' + pc.description + '</span>';
+            reply += '<br><br><span style="background:#fef3c7;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600">⏸ ' + escapeHTML(pc.description) + '</span>';
           }
         }
 
