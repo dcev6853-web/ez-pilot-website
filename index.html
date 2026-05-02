@@ -168,16 +168,21 @@
 
   /* ========= LOGOS STRIP ========= */
   .logos{
-    padding:50px 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-    background:#fafafa;
+    padding:50px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:#fafafa;overflow:hidden;
   }
   .logos-title{text-align:center;font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:24px}
-  .logos-grid{
-    display:flex;gap:40px;justify-content:center;align-items:center;
-    flex-wrap:wrap;max-width:1100px;margin:0 auto;opacity:.7;
+  .logos-track{
+    display:flex;gap:60px;align-items:center;
+    animation:marquee 20s linear infinite;
+    width:max-content;
   }
-  .logo-item{font-size:17px;font-weight:700;color:var(--ink-2);letter-spacing:-0.01em}
+  .logos-track:hover{animation-play-state:paused}
+  @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .logo-item{font-size:17px;font-weight:700;color:var(--ink-2);letter-spacing:-0.01em;white-space:nowrap;opacity:.7;transition:opacity .2s}
+  .logo-item:hover{opacity:1}
   .logo-item.script{font-family:Georgia,serif;font-style:italic;font-size:22px}
+  .logo-sep{color:var(--line);font-size:20px;user-select:none}
 
   /* ========= SECTION ========= */
   section{padding:100px 24px}
@@ -415,7 +420,7 @@
     </div>
     <div class="trial-pill">⚡ 1-month free Pro trial · No credit card required</div>
     <h1>Your Autonomous<span class="accent">AI Pilot</span></h1>
-    <p class="sub">Run ads, manage docs, book trips, track budgets, and reply to messages — all on autopilot. Powered by Claude Opus 4.6, Sonnet 4.6, GPT-5, Gemini, and more.</p>
+    <p class="sub">Run ads, manage docs, book trips, track budgets, and reply to messages — all on autopilot. Powered by Claude Opus 4.6, Sonnet 4.6, GPT-5, Gemma, and more.</p>
     <div class="hero-cta">
       <a href="/ez-pilot.html" class="btn btn-primary btn-xl">🚀 Start Free Trial →</a>
       <a href="#how-it-works" class="btn btn-ghost btn-xl" style="border:1px solid var(--line);background:#fff">▶ Watch how it works</a>
@@ -463,14 +468,24 @@
 <!-- ========= LOGOS ========= -->
 <div class="logos">
   <div class="logos-title">Powered by the world's best AI models</div>
-  <div class="logos-grid">
-    <div class="logo-item">Anthropic</div>
-    <div class="logo-item script">OpenAI</div>
-    <div class="logo-item">Google Gemini</div>
-    <div class="logo-item">xAI Grok</div>
-    
-    <div class="logo-item">Mistral</div>
-    <div class="logo-item">Perplexity</div>
+  <div class="logos-track">
+    <div class="logo-item">Anthropic</div><span class="logo-sep">→</span>
+    <div class="logo-item script">OpenAI</div><span class="logo-sep">→</span>
+    <div class="logo-item">Google Gemini</div><span class="logo-sep">→</span>
+    <div class="logo-item">xAI Grok</div><span class="logo-sep">→</span>
+    <div class="logo-item">Mistral</div><span class="logo-sep">→</span>
+    <div class="logo-item">Google Gemma</div><span class="logo-sep">→</span>
+    <div class="logo-item">Ollama</div><span class="logo-sep">→</span>
+    <div class="logo-item">OpenRouter</div><span class="logo-sep">→</span>
+    <!-- duplicate for seamless loop -->
+    <div class="logo-item">Anthropic</div><span class="logo-sep">→</span>
+    <div class="logo-item script">OpenAI</div><span class="logo-sep">→</span>
+    <div class="logo-item">Google Gemini</div><span class="logo-sep">→</span>
+    <div class="logo-item">xAI Grok</div><span class="logo-sep">→</span>
+    <div class="logo-item">Mistral</div><span class="logo-sep">→</span>
+    <div class="logo-item">Google Gemma</div><span class="logo-sep">→</span>
+    <div class="logo-item">Ollama</div><span class="logo-sep">→</span>
+    <div class="logo-item">OpenRouter</div><span class="logo-sep">→</span>
   </div>
 </div>
 
@@ -672,7 +687,7 @@
       </details>
       <details class="faq-item">
         <summary>Which AI models do you use?</summary>
-        <div class="answer">All 9 major models: Claude Opus 4.6, Claude Sonnet 4.6, Claude Sonnet 3.7, GPT-5, OpenAI o1, Gemini 2.5 Pro, Grok 4, Mistral Large, and Perplexity. Pick your favorite directly in chat.</div>
+        <div class="answer">All 9 major models: Claude Opus 4.6, Claude Sonnet 4.6, Claude Sonnet 3.7, GPT-5, OpenAI o1, Gemini 2.5 Pro, Grok 4, Mistral Large, Gemma, and Ollama (local). Auto-selected for each task.</div>
       </details>
       <details class="faq-item">
         <summary>Is my data secure?</summary>
