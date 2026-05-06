@@ -165,7 +165,6 @@
     background:#611f69;color:#fff;font-weight:900;font-size:18px;
     font-family:Georgia,serif;
   }
-  .int-card{position:relative}
 
   /* Chat empty state */
   .chat-empty{
@@ -425,23 +424,7 @@
 
   /* ===== INTEGRATIONS ===== */
   .int-top{display:flex;gap:12px;margin-bottom:18px}
-  .int-search{flex:1;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 18px;font-size:13px}
-  .connect-all-btn{background:var(--ink);color:var(--yellow);padding:13px 22px;border-radius:12px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
-  .connect-all-btn.disconnect-mode{background:#dc2626;color:#fff}
-  .int-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
-  .int-tab{padding:8px 16px;border-radius:999px;font-size:12px;font-weight:600;background:#fff;color:var(--muted);border:1px solid var(--line)}
-  .int-tab.active{background:var(--yellow);color:var(--ink);border-color:var(--yellow-deep)}
-  .int-section{margin-bottom:26px}
-  .int-section h2{font-size:13px;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);display:flex;align-items:center;gap:10px}
   .count-pill{background:#f5f5f5;color:var(--muted);padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;text-transform:none;letter-spacing:0}
-  .int-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  .int-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column}
-  .int-card .name{font-size:13px;font-weight:700}
-  .int-card .desc{font-size:11px;color:var(--muted);margin:2px 0 12px;line-height:1.3;flex:1}
-  .int-toggle-btn{padding:8px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:0.04em;border:1px solid transparent;cursor:pointer;transition:all .15s}
-  .itb-disconnected{background:var(--yellow);color:var(--ink);border-color:var(--yellow-deep)}
-  .itb-connected{background:#dcfce7;color:#166534;border-color:#86efac}
-  .itb-live{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
 
   /* ===== PRICING ===== */
   .pricing-head{text-align:center;margin-bottom:24px}
@@ -655,7 +638,6 @@
       <div class="nav-item" data-screen="tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Tasks</div>
       <div class="nav-item" data-screen="agents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Agents</div>
       <div class="nav-item" data-screen="budget"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Budget</div>
-      <div class="nav-item" data-screen="integrations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Integrations</div>
       <div class="nav-item" data-screen="pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Pricing</div>
       <div class="nav-item" data-screen="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</div>
     </nav>
@@ -702,6 +684,28 @@
               <button class="quick-prompt" onclick="goTo('chat')">📋 Show me my tasks</button>
               <button class="quick-prompt" onclick="goTo('chat')">💰 How can I save money this month?</button>
               <button class="quick-prompt" onclick="goTo('chat')">📢 Launch an ad campaign</button>
+              <button class="quick-prompt" onclick="goTo('agents')">🌐 Browse the web</button>
+              <button class="quick-prompt" onclick="goTo('chat')">💼 Find jobs</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- API Keys (OpenRouter + HuggingFace) -->
+        <div id="api-keys-section" style="max-width:480px;margin:24px auto 0">
+          <div style="text-align:center;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;cursor:pointer" onclick="document.getElementById('api-keys-panel').style.display=document.getElementById('api-keys-panel').style.display==='none'?'block':'none'">
+            🔑 API Keys <span style="font-size:9px;color:var(--muted-2)">(optional — click to expand)</span>
+          </div>
+          <div id="api-keys-panel" style="display:none;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div>
+                <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">OpenRouter</label>
+                <input type="password" id="key-openrouter" placeholder="sk-or-v1-..." style="width:100%;margin-top:4px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:12px;font-family:monospace" onchange="saveApiKey('openrouter',this.value)">
+              </div>
+              <div>
+                <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">HuggingFace</label>
+                <input type="password" id="key-huggingface" placeholder="hf_..." style="width:100%;margin-top:4px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:12px;font-family:monospace" onchange="saveApiKey('huggingface',this.value)">
+              </div>
+              <div style="font-size:9px;color:var(--muted-2);text-align:center">Keys stored locally (encrypted). Never sent to our servers.</div>
             </div>
           </div>
         </div>
@@ -728,7 +732,6 @@
               ✅ Email (via Google sign-in)<br>
               ✅ Calendar<br>
               ✅ Google Docs<br>
-              <a href="javascript:goTo('integrations')" style="color:var(--yellow-deep);font-weight:700;font-size:11px">+ Connect WhatsApp, Telegram →</a>
             </div>
           </div>
         </div>
@@ -885,92 +888,6 @@
       </section>
 
       <!-- INTEGRATIONS -->
-      <section class="screen" id="integrations">
-        <div class="page-head"><h1>Integrations</h1></div>
-        <div class="live-banner">
-          <div class="live-dot"></div>
-          <div class="txt"><div class="t" id="liveCount">services connected</div><div class="s">Auto-detect · checks OAuth token validity every 5 min · pings provider API to confirm the account is live</div></div>
-          <div class="count">LIVE</div>
-        </div>
-        <div class="int-top">
-          <input type="text" class="int-search" placeholder="Search 50+ integrations…">
-          <button class="connect-all-btn" id="connectAllBtn" onclick="toggleConnectAll()">⚡ Connect All</button>
-        </div>
-        <div class="int-tabs">
-          <button class="int-tab active">All</button><button class="int-tab">Chat & Messaging</button><button class="int-tab">AI Models</button><button class="int-tab">Ad Networks</button><button class="int-tab">Productivity</button><button class="int-tab">Smart Home</button>
-        </div>
-
-        <div class="int-section">
-          <h2>Chat & Messaging <span class="count-pill">12</span></h2>
-          <div class="int-grid">
-            <div class="int-card"><div class="int-logo"><img src="logos/whatsapp.svg" alt="WhatsApp logo"></div><div class="name">WhatsApp</div><div class="desc">Meta Business API</div><button class="int-toggle-btn itb-live" data-state="live">LIVE</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#fafafa;font-weight:800;font-size:13px;color:#0a0a0a">T</div><div class="name">Telegram</div><div class="desc">Bot API</div><button class="int-toggle-btn itb-live" data-state="live">LIVE</button></div>
-            <div class="int-card"><div class="int-logo slack-fallback" style="color:#e01e5a">#</div><div class="name">Slack</div><div class="desc">slack.com OAuth 2.0</div><button class="int-toggle-btn itb-live" data-state="live">LIVE</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/discord.svg" alt="Discord logo"></div><div class="name">Discord</div><div class="desc">discord.com/api OAuth</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#fafafa;font-weight:800;font-size:13px;color:#0a0a0a">I</div><div class="name">iMessage</div><div class="desc">macOS bridge</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#fafafa;font-weight:800;font-size:13px;color:#0a0a0a">M</div><div class="name">Microsoft Teams</div><div class="desc">graph.microsoft.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#fafafa;font-weight:800;font-size:13px;color:#0a0a0a">M</div><div class="name">Matrix</div><div class="desc">Decentralized</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#fafafa;font-weight:800;font-size:13px;color:#0a0a0a">Z</div><div class="name">Zoom</div><div class="desc">api.zoom.us/v2</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#8e44ad;font-weight:800;font-size:14px;color:#fff;display:flex;align-items:center;justify-content:center;border-radius:10px">N</div><div class="name">Nostr</div><div class="desc">Relay protocol · NIP-01</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-          </div>
-        </div>
-
-        <div class="int-section">
-          <h2>AI Models <span class="count-pill">12</span></h2>
-          <div class="int-grid">
-            <div class="int-card"><div class="int-logo"><img src="logos/anthropic.png" alt="Claude Opus 4.6 logo"></div><div class="name">Claude Opus 4.6</div><div class="desc">api.anthropic.com</div><button class="int-toggle-btn itb-live" data-state="live">LIVE</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/anthropic.png" alt="Claude Sonnet 4.6 logo"></div><div class="name">Claude Sonnet 4.6</div><div class="desc">api.anthropic.com</div><button class="int-toggle-btn itb-live" data-state="live">LIVE</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/openai.svg" alt="GPT-5 / o1 logo"></div><div class="name">GPT-5 / o1</div><div class="desc">api.openai.com</div><button class="int-toggle-btn itb-live" data-state="live">LIVE</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/gemini.svg" alt="Gemini 2.5 Pro logo"></div><div class="name">Gemini 2.5 Pro</div><div class="desc">generativelanguage.googleapis</div><button class="int-toggle-btn itb-connected" data-state="connected">CONNECTED</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/x.svg" alt="Grok 4 logo"></div><div class="name">Grok 4</div><div class="desc">api.x.ai</div><button class="int-toggle-btn itb-connected" data-state="connected">CONNECTED</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/mistral.svg" alt="Mistral Large logo"></div><div class="name">Mistral Large</div><div class="desc">api.mistral.ai</div><button class="int-toggle-btn itb-connected" data-state="connected">CONNECTED</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/anthropic.png" alt="Claude Sonnet 3.7 logo"></div><div class="name">Claude Sonnet 3.7</div><div class="desc">Reasoning engine</div><button class="int-toggle-btn itb-connected" data-state="connected">CONNECTED</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#0a0a0a;color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;border-radius:10px">O</div><div class="name">Ollama (Local)</div><div class="desc">localhost:11434</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#fafafa;font-weight:800;font-size:13px;color:#0a0a0a">O</div><div class="name">OpenRouter</div><div class="desc">openrouter.ai/api</div><button class="int-toggle-btn itb-connected" data-state="connected">CONNECTED</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/huggingface.svg" alt="Hugging Face logo"></div><div class="name">Hugging Face</div><div class="desc">Inference API</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#000"><svg viewBox="0 0 74 64" style="width:70%;height:70%"><path d="M37.5896 0.25L74.5396 64.25H0.639648L37.5896 0.25Z" fill="#fff"/></svg></div><div class="name">Vercel AI</div><div class="desc">ai-gateway.vercel.sh</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#fafafa;font-weight:800;font-size:13px;color:#0a0a0a">O</div><div class="name">Ollama / LM Studio</div><div class="desc">Local models</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-          </div>
-        </div>
-
-        <div class="int-section">
-          <h2>Ad Networks <span class="count-pill">8</span></h2>
-          <div class="int-grid">
-          </div>
-        </div>
-
-        <div class="int-section">
-          <h2>Productivity & Social <span class="count-pill">12</span></h2>
-          <div class="int-grid">
-            <div class="int-card"><div class="name">Gmail <span class="int-status ok" title="Token valid · verified 2m ago">ACTIVE</span></div><div class="desc">gmail.googleapis.com</div><button class="int-toggle-btn itb-live" data-state="live" data-service="gmail">LIVE</button></div>
-            <div class="int-card"><div class="name">Google Docs <span class="int-status ok" title="Token valid">ACTIVE</span></div><div class="desc">Docs API</div><button class="int-toggle-btn itb-live" data-state="live" data-service="google_docs">LIVE</button></div>
-            <div class="int-card"><div class="name">Calendar <span class="int-status ok" title="Token valid">ACTIVE</span></div><div class="desc">Google & Apple</div><button class="int-toggle-btn itb-live" data-state="live" data-service="calendar">LIVE</button></div>
-            <div class="int-card"><div class="name">Notion <span class="int-status ok" title="Token valid">ACTIVE</span></div><div class="desc">api.notion.com</div><button class="int-toggle-btn itb-live" data-state="live" data-service="notion">LIVE</button></div>
-            <div class="int-card"><div class="name">GitHub <span class="int-status ok" title="Token valid">ACTIVE</span></div><div class="desc">api.github.com</div><button class="int-toggle-btn itb-live" data-state="live" data-service="github">LIVE</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/trello.svg" alt="Trello logo"></div><div class="name">Trello</div><div class="desc">api.trello.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/instagram.png" alt="Instagram logo"></div><div class="name">Instagram</div><div class="desc">graph.facebook.com/v19</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/linkedin.png" alt="LinkedIn logo"></div><div class="name">LinkedIn</div><div class="desc">api.linkedin.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/snapchat.svg" alt="Snapchat logo"></div><div class="name">Snapchat</div><div class="desc">accounts.snapchat.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/spotify.png" alt="Spotify logo"></div><div class="name">Spotify</div><div class="desc">api.spotify.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/uber.svg" alt="Uber logo"></div><div class="name">Uber</div><div class="desc">api.uber.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/amazon.png" alt="Amazon logo"></div><div class="name">Amazon</div><div class="desc">Login with Amazon</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-          </div>
-        </div>
-
-        <div class="int-section">
-          <h2>Smart Home & Tools <span class="count-pill">8</span></h2>
-          <div class="int-grid">
-            <div class="int-card"><div class="int-logo" style="background:#0066b3;color:#fff;font-weight:900;font-size:18px;font-family:Helvetica,sans-serif">P</div><div class="name">Philips Hue</div><div class="desc">developers.meethue.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#fafafa;font-weight:800;font-size:13px;color:#0a0a0a">8</div><div class="name">8 Sleep</div><div class="desc">Partner API</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/sonos.png" alt="Sonos logo"></div><div class="name">Sonos</div><div class="desc">developer.sonos.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/homeassistant.png" alt="Home Assistant logo"></div><div class="name">Home Assistant</div><div class="desc">Local hub</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/vscode.svg" alt="VS Code logo"></div><div class="name">VS Code</div><div class="desc">Extension API</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/1password.png" alt="1Password logo"></div><div class="name">1Password</div><div class="desc">developer.1password.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo" style="background:#fafafa;font-weight:800;font-size:13px;color:#0a0a0a">W</div><div class="name">Weather</div><div class="desc">api.openweathermap.org</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-            <div class="int-card"><div class="int-logo"><img src="logos/stripe.png" alt="Stripe logo"></div><div class="name">Stripe</div><div class="desc">api.stripe.com</div><button class="int-toggle-btn itb-disconnected" data-state="disconnected">CONNECT</button></div>
-          </div>
-        </div>
-      </section>
 
       <!-- PRICING -->
       <section class="screen" id="pricing">
@@ -1004,7 +921,6 @@
               <li>Auto task creation & execution</li>
               <li>Trip & hotel booking</li>
               <li>Google Docs automation</li>
-              <li>50+ integrations</li>
             </ul>
             <button class="cta cta-upgrade" onclick="handleUpgradeClick('pro')">Start Free Trial →</button>
             <div class="pay-link">Monthly link: <a href="https://pay.ez-pilot.com/pro/monthly">pay.ez-pilot.com/pro/monthly</a></div>
@@ -1025,7 +941,6 @@
               <li>Browser agents — AI browses the web for you</li>
               <li>Real-time web research & data extraction</li>
               <li>Priority agent execution</li>
-              <li>All 50+ integrations enabled</li>
               <li>Premium support</li>
             </ul>
             <button class="cta cta-max" onclick="handleUpgradeClick('max')">Upgrade to Max →</button>
@@ -1173,6 +1088,22 @@
   }
   function secureRemove(key){ localStorage.removeItem(key); }
 
+  // API Key storage (encrypted, local only)
+  async function saveApiKey(provider, value){
+    if(!value){ secureRemove('ezp_key_'+provider); return; }
+    await secureSet('ezp_key_'+provider, value);
+  }
+  async function loadApiKey(provider){
+    return await secureGet('ezp_key_'+provider);
+  }
+  // Restore saved keys on load
+  (async function(){
+    const or_key = await loadApiKey('openrouter');
+    const hf_key = await loadApiKey('huggingface');
+    if(or_key){ const el=document.getElementById('key-openrouter'); if(el) el.value='••••••••'; }
+    if(hf_key){ const el=document.getElementById('key-huggingface'); if(el) el.value='••••••••'; }
+  })();
+
   // Profile helpers using encrypted storage
   async function gP(uid){ return secureGetJSON('ezp_p_'+uid); }
   async function sP(uid,d){ await secureSet('ezp_p_'+uid, JSON.stringify(d)); }
@@ -1210,7 +1141,6 @@
     document.getElementById('login-overlay').style.display='none';
     checkUpgradeIntent();
     if(admin || profile.subscriptionActive){
-      startIntegrationAutoDetect();
     } else {
       document.getElementById('payment-overlay').classList.add('show');
     }
@@ -1554,13 +1484,6 @@
     // Get active context pills
     const activePills = Array.from(document.querySelectorAll('.context-pill.active')).map(p=>p.dataset.context).filter(Boolean);
 
-    const escapeHTML = (s) => String(s).replace(/[&<>"']/g, (ch) => (
-      ch === '&' ? '&amp;' :
-      ch === '<' ? '&lt;' :
-      ch === '>' ? '&gt;' :
-      ch === '"' ? '&quot;' : '&#39;'
-    ));
-
     try {
       // Try calling the real backend
       const user = await secureGetJSON('ezp_user');
@@ -1587,14 +1510,14 @@
         const data = await res.json();
         let reply = '<span class="tool-chip">AI generated</span>';
         if (data.pipeline) {
-          reply = '<span class="tool-chip">' + (data.pipeline.modelsUsed || [model]).map(escapeHTML).join(' → ') + '</span>';
+          reply = '<span class="tool-chip">' + (data.pipeline.modelsUsed || [model]).join(' → ') + '</span>';
         }
-        reply += '<br>' + escapeHTML(data.response || data.text || 'Done.').replace(/\n/g, '<br>');
+        reply += '<br>' + (data.response || data.text || 'Done.').replace(/\n/g, '<br>');
 
         // Show pending confirmations
         if (data.pendingConfirmations?.length) {
           for (const pc of data.pendingConfirmations) {
-            reply += '<br><br><span style="background:#fef3c7;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600">⏸ ' + escapeHTML(pc.description) + '</span>';
+            reply += '<br><br><span style="background:#fef3c7;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600">⏸ ' + pc.description + '</span>';
           }
         }
 
@@ -1757,34 +1680,22 @@
   }
 
   // ===== INTEGRATIONS =====
-  function setIntegrationState(btn,state){
     btn.dataset.state=state;
     btn.classList.remove('itb-disconnected','itb-connected','itb-live');
     if(state==='disconnected'){btn.classList.add('itb-disconnected');btn.textContent='CONNECT'}
     else if(state==='connected'){btn.classList.add('itb-connected');btn.textContent='CONNECTED'}
     else{btn.classList.add('itb-live');btn.textContent='LIVE'}
-    updateConnectAllBtn();
   }
-  document.querySelectorAll('.int-toggle-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{setIntegrationState(btn, btn.dataset.state==='disconnected'?'live':'disconnected')});
   });
 
   // Fix: Connect All button — properly wired to onclick
-  function updateConnectAllBtn(){
-    const allBtns=document.querySelectorAll('.int-toggle-btn');if(!allBtns.length)return;
     const allConn=Array.from(allBtns).every(b=>b.dataset.state!=='disconnected');
-    const btn=document.getElementById('connectAllBtn') || document.querySelector('.connect-all');
     if(!btn)return;
-    btn.onclick = connectAll; // Ensure onclick is wired
     if(allConn){btn.innerHTML='🔌 Disconnect All';btn.classList.add('disconnect-mode')}
     else{btn.innerHTML='⚡ Connect All';btn.classList.remove('disconnect-mode')}
   }
-  function connectAll(){
-    const allBtns=document.querySelectorAll('.int-toggle-btn');
     const allConn=Array.from(allBtns).every(b=>b.dataset.state!=='disconnected');
-    allBtns.forEach(b=>setIntegrationState(b, allConn?'disconnected':'live'));
   }
-  updateConnectAllBtn();
 
   // ===== DISCORD JOIN POPUP =====
   function showDiscordPopup(){
@@ -1801,7 +1712,6 @@
   }
 
   let autoDetectTimer=null;
-  function startIntegrationAutoDetect(){
     if(autoDetectTimer)return;
     showDiscordPopup(); // Show Discord popup when user enters the app
     autoDetectTimer=setInterval(()=>{},300000);
