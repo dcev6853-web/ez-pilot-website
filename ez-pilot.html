@@ -1138,10 +1138,24 @@
     if(admin){ profile.subscriptionActive=true; profile.plan='max'; }
     await sP(user.uid, profile);
     await secureSet('ezp_user', JSON.stringify({uid:user.uid, identifier:email, fullName:profile.displayName, plan:profile.plan}));
+
+    // Hide login overlay
     document.getElementById('login-overlay').style.display='none';
+
+    // Reset login button state
+    const loginBtn = document.getElementById('login-cta');
+    if(loginBtn){ loginBtn.classList.remove('loading'); loginBtn.textContent='Sign In →'; }
+
+    // Check pending upgrade intent
     checkUpgradeIntent();
+
+    // Show app or payment gate
     if(admin || profile.subscriptionActive){
+      // User has access — go to home
+      goTo('home');
+      initApp();
     } else {
+      // Show payment gate
       document.getElementById('payment-overlay').classList.add('show');
     }
   }
@@ -1335,8 +1349,20 @@
     secureRemove('ezp_token');
     secureRemove('ezp_user');
     secureRemove('ezp_remember');
+    // Reset UI
     document.getElementById('login-overlay').style.display='flex';
-    stopIntegrationAutoDetect();
+    document.getElementById('payment-overlay').classList.remove('show');
+    // Reset login form
+    const loginBtn = document.getElementById('login-cta');
+    if(loginBtn){ loginBtn.classList.remove('loading'); loginBtn.textContent='Sign In →'; loginBtn.disabled=true; }
+    const termsBox = document.getElementById('terms-accept');
+    if(termsBox) termsBox.checked = false;
+    hideLoginError();
+    // Reset phone OTP state
+    otpSent = false;
+    confirmationResult = null;
+    const otpSec = document.getElementById('otp-section');
+    if(otpSec) otpSec.style.display = 'none';
   }
 
   // ===== AUTO-RESTORE SESSION =====
@@ -1688,15 +1714,6 @@
   }
   });
 
-  // Fix: Connect All button — properly wired to onclick
-    const allConn=Array.from(allBtns).every(b=>b.dataset.state!=='disconnected');
-    if(!btn)return;
-    if(allConn){btn.innerHTML='🔌 Disconnect All';btn.classList.add('disconnect-mode')}
-    else{btn.innerHTML='⚡ Connect All';btn.classList.remove('disconnect-mode')}
-  }
-    const allConn=Array.from(allBtns).every(b=>b.dataset.state!=='disconnected');
-  }
-
   // ===== DISCORD JOIN POPUP =====
   function showDiscordPopup(){
     if(localStorage.getItem('ezp_discord_dismissed')) return;
@@ -1711,12 +1728,12 @@
     if(el) el.style.display='none';
   }
 
-  let autoDetectTimer=null;
-    if(autoDetectTimer)return;
-    showDiscordPopup(); // Show Discord popup when user enters the app
-    autoDetectTimer=setInterval(()=>{},300000);
+  // Show Discord popup after login (delayed)
+  function initApp(){
+    if(localStorage.getItem('ezp_discord_dismissed')!=='1'){
+      showDiscordPopup();
+    }
   }
-  function stopIntegrationAutoDetect(){if(autoDetectTimer)clearInterval(autoDetectTimer);autoDetectTimer=null}
 </script>
 </body>
 </html>
