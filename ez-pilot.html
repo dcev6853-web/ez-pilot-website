@@ -33,19 +33,12 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <meta name="google-signin-client_id" content="830406008027-2bc4rml155565po4pebupp2g1u4456ol.apps.googleusercontent.com">
 
-<!-- Firebase Auth (modular SDK v12.13.0 via CDN) -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
-  import {
-    getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
-    signInWithPopup, signInWithPhoneNumber, signOut, onAuthStateChanged,
-    setPersistence, browserLocalPersistence, browserSessionPersistence,
-    GoogleAuthProvider, OAuthProvider, RecaptchaVerifier, updateProfile,
-    EmailAuthProvider, reauthenticateWithCredential, updatePassword
-  } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-
-  const firebaseConfig = {
+<!-- Firebase Auth (compat SDK v12.13.0 — synchronous, no race conditions with inline scripts) -->
+<script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics-compat.js"></script>
+<script>
+  firebase.initializeApp({
     apiKey: "AIzaSyASBcIGxmL4dekOnLkiItU7MJeQ3Vu1MY8",
     authDomain: "ez-pilot-c321c.firebaseapp.com",
     databaseURL: "https://ez-pilot-c321c-default-rtdb.firebaseio.com",
@@ -54,34 +47,15 @@
     messagingSenderId: "858556534263",
     appId: "1:858556534263:web:808f37c5b67d45a5dbf2f2",
     measurementId: "G-FRJ4CJXYNL"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const auth = getAuth(app);
-
-  const googleProvider = new GoogleAuthProvider();
+  });
+  firebase.analytics();
+  const fbAuth = firebase.auth();
+  const googleProvider = new firebase.auth.GoogleAuthProvider();
   ['https://www.googleapis.com/auth/gmail.modify',
    'https://www.googleapis.com/auth/documents',
    'https://www.googleapis.com/auth/calendar',
    'https://www.googleapis.com/auth/drive.file'
   ].forEach(s => googleProvider.addScope(s));
-
-  // Bridge to window for inline onclick handlers
-  window._fbAuth = auth;
-  window._fbGoogleProvider = googleProvider;
-  window._fb = {
-    signInWithEmailAndPassword, createUserWithEmailAndPassword,
-    signInWithPopup, signInWithPhoneNumber, signOut, onAuthStateChanged,
-    setPersistence, browserLocalPersistence, browserSessionPersistence,
-    GoogleAuthProvider, OAuthProvider, RecaptchaVerifier, updateProfile,
-    EmailAuthProvider, reauthenticateWithCredential, updatePassword,
-  };
-
-  // Auto-restore session
-  onAuthStateChanged(auth, user => {
-    if(user && window.postAuth) window.postAuth(user);
-  });
 </script>
 <style>
   :root{
@@ -1265,8 +1239,8 @@
     btn.classList.add('loading'); btn.textContent='Signing in\u2026';
     try{
       const remember=document.getElementById('remember-me')?.checked;
-      await window._fb.setPersistence(window._fbAuth, remember ? window._fb.browserLocalPersistence : window._fb.browserSessionPersistence);
-      const cred = await window._fb.signInWithEmailAndPassword(window._fbAuth, id, pw);
+      await fbAuth.setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
+      const cred = await fbAuth.signInWithEmailAndPassword(id, pw);
       if(remember) secureSet('ezp_remember',id);
       postAuth(cred.user);
     }catch(err){
@@ -1288,9 +1262,9 @@
     btn.classList.add('loading'); btn.textContent='Creating account\u2026';
     try{
       const remember=document.getElementById('remember-me')?.checked;
-      await window._fb.setPersistence(window._fbAuth, remember ? window._fb.browserLocalPersistence : window._fb.browserSessionPersistence);
-      const cred = await window._fb.createUserWithEmailAndPassword(window._fbAuth, id, pw);
-      await window._fb.updateProfile(cred.user, {displayName:name});
+      await fbAuth.setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
+      const cred = await fbAuth.createUserWithEmailAndPassword(id, pw);
+      await cred.user.updateProfile({displayName:name});
       if(remember) secureSet('ezp_remember',id);
       postAuth(cred.user);
     }catch(err){
@@ -1313,9 +1287,9 @@
     btn.classList.add('loading'); btn.textContent='Sending code\u2026';
     try{
       if(!recaptchaVerifier){
-        recaptchaVerifier = new window._fb.RecaptchaVerifier(window._fbAuth, 'recaptcha-container', {size:'invisible'});
+        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size:'invisible'});
       }
-      confirmationResult = await window._fb.signInWithPhoneNumber(window._fbAuth, phone, recaptchaVerifier);
+      confirmationResult = await fbAuth.signInWithPhoneNumber(phone, recaptchaVerifier);
       otpSent = true;
       document.getElementById('otp-section').style.display='block';
       btn.classList.remove('loading'); btn.textContent='Verify code \u2192';
@@ -1349,8 +1323,8 @@
     hideLoginError();
     try{
       const remember=document.getElementById('remember-me')?.checked;
-      await window._fb.setPersistence(window._fbAuth, remember ? window._fb.browserLocalPersistence : window._fb.browserSessionPersistence);
-      const cred = await window._fb.signInWithPopup(window._fbAuth, window._fbGoogleProvider);
+      await fbAuth.setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
+      const cred = await fbAuth.signInWithPopup(googleProvider);
       if(remember && cred.user.email) secureSet('ezp_remember', cred.user.email);
       postAuth(cred.user);
     }catch(err){showLoginError(fErr(err))}
@@ -1362,17 +1336,17 @@
     hideLoginError();
     try{
       const remember=document.getElementById('remember-me')?.checked;
-      await window._fb.setPersistence(window._fbAuth, remember ? window._fb.browserLocalPersistence : window._fb.browserSessionPersistence);
-      const msProvider = new window._fb.OAuthProvider('microsoft.com');
+      await fbAuth.setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
+      const msProvider = new firebase.auth.OAuthProvider('microsoft.com');
       msProvider.setCustomParameters({tenant:'common'});
-      const cred = await window._fb.signInWithPopup(window._fbAuth, msProvider);
+      const cred = await fbAuth.signInWithPopup(msProvider);
       if(remember && cred.user.email) secureSet('ezp_remember', cred.user.email);
       postAuth(cred.user);
     }catch(err){showLoginError(fErr(err))}
   }
 
   function logout(){
-    window._fb.signOut(window._fbAuth).catch(()=>{});
+    fbAuth.signOut().catch(()=>{});
     secureRemove('ezp_token');
     secureRemove('ezp_user');
     secureRemove('ezp_remember');
@@ -1393,9 +1367,9 @@
   }
 
   // ===== AUTO-RESTORE SESSION =====
-  // Auth state listener is in the module <script> above.
-  // postAuth is exposed on window so the module can call it.
-  window.postAuth = postAuth;
+  fbAuth.onAuthStateChanged(user=>{
+    if(user) postAuth(user);
+  });
 
   // Pre-fill remembered email
   (async function(){
@@ -1487,7 +1461,7 @@
     u.fullName=newName;await secureSet('ezp_user',JSON.stringify(u));
     document.getElementById('profile-display-name').textContent=newName;
     document.getElementById('profile-avatar').textContent=newName.charAt(0).toUpperCase();
-    if(window._fbAuth.currentUser) window._fb.updateProfile(window._fbAuth.currentUser, {displayName:newName}).catch(()=>{});
+    if(fbAuth.currentUser) fbAuth.currentUser.updateProfile({displayName:newName}).catch(()=>{});
     showProfileStatus('\u2713 Saved.',true);
   }
   function showProfileStatus(m,ok){const el=document.getElementById('profile-status');el.textContent=m;el.style.color=ok?'#10b981':'#ef4444';el.style.display='block';setTimeout(()=>{el.style.display='none'},2500)}
@@ -1496,11 +1470,11 @@
     const np=document.getElementById('pw-new').value;
     if(!cur||!np){showPwStatus('Both fields required.',false);return}
     if(np.length<8){showPwStatus('8+ characters required.',false);return}
-    const user=window._fbAuth.currentUser;
+    const user=fbAuth.currentUser;
     if(!user||!user.email){showPwStatus('Only email accounts can change password.',false);return}
-    const cred=window._fb.EmailAuthProvider.credential(user.email,cur);
-    window._fb.reauthenticateWithCredential(user,cred).then(()=>{
-      return window._fb.updatePassword(user,np);
+    const cred=firebase.auth.EmailAuthProvider.credential(user.email,cur);
+    user.reauthenticateWithCredential(cred).then(()=>{
+      return user.updatePassword(np);
     }).then(()=>{
       document.getElementById('pw-current').value='';document.getElementById('pw-new').value='';
       showPwStatus('\u2713 Password updated.',true);
@@ -1541,7 +1515,7 @@
     try {
       // Try calling the real backend
       const user = await secureGetJSON('ezp_user');
-      const token = user.uid ? await new Promise(r => { if(window._fbAuth.currentUser) window._fbAuth.currentUser.getIdToken().then(r).catch(()=>r(null)); else r(null); }) : null;
+      const token = user.uid ? await new Promise(r => { if(fbAuth.currentUser) fbAuth.currentUser.getIdToken().then(r).catch(()=>r(null)); else r(null); }) : null;
 
       const res = await fetch(API_BASE + '/api/task', {
         method: 'POST',
@@ -1639,7 +1613,7 @@
     );
 
     try {
-      const token = window._fbAuth.currentUser ? await window._fbAuth.currentUser.getIdToken() : null;
+      const token = fbAuth.currentUser ? await fbAuth.currentUser.getIdToken() : null;
       const res = await fetch(API_BASE + '/api/agent/browse', {
         method: 'POST',
         headers: {
