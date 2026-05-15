@@ -74,43 +74,13 @@
   .app{display:flex;height:100vh;width:100vw}
 
   /* ===== LOGIN OVERLAY ===== */
-  .login-overlay{
-    position:fixed;inset:0;z-index:1000;
-    background:linear-gradient(135deg,#fff,#fff8d8 50%,#fff 100%);
-    display:flex;align-items:center;justify-content:center;
-    animation:fade .4s;
-  }
   @keyframes fade{from{opacity:0}to{opacity:1}}
-  .login-card{
-    width:440px;background:#fff;border:1px solid var(--line);
-    border-radius:24px;padding:42px 44px;
-    box-shadow:0 30px 80px rgba(0,0,0,.12);text-align:center;
-  }
-  .login-card .lc-logo{width:72px;height:72px;margin:0 auto 18px;animation:logoIn .6s cubic-bezier(.2,.8,.2,1)}
   @keyframes logoIn{from{opacity:0;transform:translateY(-8px) scale(.85)}to{opacity:1;transform:none}}
-  .login-card h1{font-size:28px;font-weight:800;letter-spacing:-0.02em}
-  .login-card .sub{font-size:13px;color:var(--muted);margin-top:6px}
-  .login-card .domain-pill{
-    display:inline-block;margin-top:10px;
-    background:#f5f5f5;padding:4px 10px;border-radius:999px;
-    font-size:11px;color:var(--muted-2);font-weight:600;
-  }
-  .login-tabs{display:flex;background:#f5f5f5;border-radius:11px;padding:4px;margin:24px 0 12px}
-  .login-tab{flex:1;padding:9px;font-size:12px;font-weight:700;border-radius:8px;color:var(--muted)}
-  .login-tab.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-  .login-input{
-    width:100%;background:#fafafa;border:1px solid var(--line);
-    border-radius:12px;padding:13px 16px;font-size:13px;margin-bottom:9px;
-  }
-  .login-input:focus{border-color:var(--yellow-deep);background:#fff}
-  .login-cta{
     width:100%;background:var(--yellow);color:var(--ink);
     border:1px solid var(--yellow-deep);
     padding:14px;border-radius:12px;font-weight:800;font-size:14px;margin-top:6px;
     transition:transform .12s;
   }
-  .login-cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(244,208,0,.4)}
-  .login-cta:disabled{background:#f5f5f5;color:var(--muted-2);border-color:var(--line);cursor:not-allowed;transform:none;box-shadow:none}
   .terms-check{display:flex;align-items:flex-start;gap:9px;margin:10px 0 6px;font-size:12px;color:var(--muted);text-align:left;cursor:pointer}
   .terms-check input{margin-top:3px;width:16px;height:16px;accent-color:var(--yellow-deep);flex-shrink:0;cursor:pointer}
   .terms-check span{line-height:1.45}
@@ -176,16 +146,11 @@
   .chat-empty p{font-size:14px;margin-top:8px;max-width:400px;line-height:1.5}
 
   /* Login error + loading */
-  .login-error{
     background:#fee2e2;color:#991b1b;border:1px solid #fecaca;
     padding:10px 14px;border-radius:10px;font-size:12px;font-weight:600;
     margin-bottom:10px;display:none;animation:shake .3s;
   }
-  .login-error.show{display:block}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-  .login-input.invalid{border-color:var(--red);background:#fef2f2}
-  .login-cta.loading{background:var(--muted-2);pointer-events:none}
-  .login-cta.loading::after{
     content:"";width:14px;height:14px;margin-left:8px;
     border:2px solid #fff;border-top-color:transparent;border-radius:50%;
     display:inline-block;vertical-align:middle;animation:spin .7s linear infinite;
@@ -193,78 +158,47 @@
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* ===== PAYMENT GATE OVERLAY ===== */
-  .payment-overlay{
     position:fixed;inset:0;z-index:999;
     background:linear-gradient(135deg,#fff,#fff8d8 50%,#fff 100%);
     display:none;align-items:center;justify-content:center;padding:20px;
     overflow-y:auto;
   }
-  .payment-overlay.show{display:flex}
-  .payment-card{
     width:520px;max-width:100%;background:#fff;border:1px solid var(--line);
     border-radius:24px;padding:42px 44px;
     box-shadow:0 30px 80px rgba(0,0,0,.12);
   }
-  .pay-head{text-align:center;margin-bottom:24px}
-  .pay-head svg{width:60px;height:60px;margin-bottom:14px}
-  .pay-head h2{font-size:24px;font-weight:800;letter-spacing:-0.02em}
-  .pay-head p{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
-  .trial-box{
     background:linear-gradient(135deg,#fff7b8,#ffe66b);
     border:1px dashed var(--yellow-deep);border-radius:12px;
     padding:14px 16px;margin-bottom:20px;text-align:center;
     font-size:13px;color:#5a4a00;font-weight:600;line-height:1.5;
   }
-  .trial-box strong{font-weight:800}
-  .pay-plan-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-  .pay-plan{
     border:2px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;
     transition:all .15s;text-align:center;
   }
-  .pay-plan:hover{border-color:var(--yellow-deep)}
-  .pay-plan.selected{border-color:var(--yellow-deep);background:var(--yellow-soft)}
-  .pay-plan .pp-name{font-size:13px;font-weight:800}
-  .pay-plan .pp-price{font-size:20px;font-weight:800;margin-top:4px;letter-spacing:-0.02em}
-  .pay-plan .pp-note{font-size:10px;color:var(--muted);margin-top:2px}
-  .pay-requirement{
     background:#fef3c7;border:1px solid #fde68a;color:#92400e;
     padding:11px 14px;border-radius:10px;font-size:12px;margin-bottom:16px;
     display:flex;align-items:flex-start;gap:9px;line-height:1.5;
   }
-  .pay-requirement::before{content:"ℹ";font-size:16px;font-weight:800;flex-shrink:0}
-  .pay-cta{
     width:100%;background:var(--ink);color:#fff;
     padding:14px;border-radius:12px;font-weight:800;font-size:14px;
     border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
     transition:all .15s;
   }
-  .pay-cta:hover{background:var(--ink-2);transform:translateY(-1px)}
-  .pay-cta.loading{background:var(--muted-2);pointer-events:none}
-  .pay-cta.loading::after{
     content:"";width:14px;height:14px;margin-left:6px;
     border:2px solid #fff;border-top-color:transparent;border-radius:50%;
     display:inline-block;animation:spin .7s linear infinite;
   }
-  .stripe-pill{
     display:inline-flex;align-items:center;gap:6px;margin-top:12px;
     font-size:11px;color:var(--muted-2);font-weight:600;
     text-align:center;justify-content:center;width:100%;
   }
-  .pay-skip-note{
     font-size:11px;color:var(--muted-2);text-align:center;margin-top:14px;line-height:1.5;
   }
-  .ldivider{display:flex;align-items:center;gap:10px;margin:22px 0 14px;color:var(--muted-2);font-size:11px;font-weight:600}
-  .ldivider::before,.ldivider::after{content:"";flex:1;height:1px;background:var(--line)}
-  .social-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-  .social-btn{
     background:#fff;border:1px solid var(--line);
     border-radius:12px;padding:12px;font-size:12px;font-weight:700;
     display:flex;align-items:center;justify-content:center;gap:8px;
     transition:all .12s;
   }
-  .social-btn:hover{border-color:#bbb;background:#fafafa}
-  .login-foot{font-size:11px;color:var(--muted-2);margin-top:18px;line-height:1.5}
-  .login-foot strong{color:var(--yellow-deep)}
 
   /* ===== SIDEBAR ===== */
   .sidebar{width:230px;flex-shrink:0;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:22px 16px;background:#fff}
@@ -482,149 +416,6 @@
   </symbol>
 </svg>
 
-<!-- ===== LOGIN OVERLAY ===== -->
-<div class="login-overlay" id="login-overlay">
-  <div class="login-card">
-    <svg class="lc-logo"><use href="#ezlogo"/></svg>
-    <h1>Welcome to EZ Pilot</h1>
-    <div class="sub">Your autonomous AI assistant</div>
-    <div class="domain-pill">🔒 https://ez-pilot.com</div>
-
-    <!-- Email / Phone tabs -->
-    <div class="login-tabs">
-      <button class="login-tab active" onclick="switchLoginTab(this,'email')">Email</button>
-      <button class="login-tab" onclick="switchLoginTab(this,'phone')">Phone</button>
-    </div>
-
-    <!-- Email mode fields -->
-    <div id="email-fields">
-      <input type="email" class="login-input" id="login-id" placeholder="you@example.com" autocomplete="email" oninput="hideLoginError()">
-      <input type="text" class="login-input" id="login-name" placeholder="Full name" autocomplete="name" style="display:none" oninput="hideLoginError()">
-      <input type="password" class="login-input" id="login-pw" placeholder="Password (min 8 chars)" autocomplete="current-password" oninput="hideLoginError()">
-    </div>
-
-    <!-- Phone mode fields (hidden by default) -->
-    <div id="phone-fields" style="display:none">
-      <input type="tel" class="login-input" id="phone-number" placeholder="+1 555 123 4567" autocomplete="tel" oninput="hideLoginError()">
-      <div id="recaptcha-container"></div>
-      <div id="otp-section" style="display:none;margin-top:8px">
-        <input type="text" class="login-input" id="otp-code" placeholder="6-digit verification code" maxlength="6" inputmode="numeric" oninput="hideLoginError()">
-      </div>
-    </div>
-
-    <div class="login-error" id="login-error"></div>
-
-    <label class="terms-check" style="margin-bottom:6px">
-      <input type="checkbox" id="remember-me">
-      <span>Remember me on this device</span>
-    </label>
-    <label class="terms-check">
-      <input type="checkbox" id="terms-accept" onchange="updateLoginButton()">
-      <span>I agree to the <a href="/terms.html" target="_blank">Terms of Service</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a></span>
-    </label>
-
-    <button class="login-cta" id="login-cta" onclick="doSubmit()" disabled>Sign In →</button>
-
-    <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--muted)">
-      <span id="auth-toggle-txt">Don't have an account?</span>
-      <a href="javascript:void(0)" onclick="toggleAuthMode()" id="auth-toggle-btn" style="color:var(--yellow-deep);font-weight:700;text-decoration:none;margin-left:4px">Sign up</a>
-    </div>
-
-    <div class="ldivider">OR CONTINUE WITH</div>
-
-    <!-- Continue with Google -->
-    <button class="social-btn" onclick="doGoogleSignIn()" style="width:100%;margin-bottom:8px;padding:12px;font-weight:600;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:10px">
-      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
-      <span>Continue with Google</span>
-    </button>
-
-    <!-- Continue with Microsoft -->
-    <button class="social-btn" onclick="doMicrosoftSignIn()" style="width:100%;padding:12px;font-weight:600;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:10px">
-      <svg width="18" height="18" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
-      <span>Continue with Microsoft</span>
-    </button>
-
-    <div class="login-foot">You must agree to the Terms & Privacy Policy to sign in.<br>New here? <strong>1-month Pro trial included</strong>.</div>
-  </div>
-</div>
-
-<!-- ===== PAYMENT GATE (shown after successful sign-in, before app access) ===== -->
-<div class="payment-overlay" id="payment-overlay">
-  <div class="payment-card">
-    <div class="pay-head">
-      <svg viewBox="0 0 1024 1024"><use href="#ezlogo"/></svg>
-      <h2>Activate Your Free Trial</h2>
-      <p>Choose a plan and add a payment method to start. You won't be charged until your 1-month trial ends on annual plans.</p>
-    </div>
-
-    <div class="trial-box">
-      ⚡ <strong>1-Month Free Trial</strong> on annual Pro — card required to verify identity.<br>
-      Cancel anytime during the trial — no charge.
-    </div>
-
-    <div class="pay-plan-row" style="grid-template-columns:1fr 1fr 1fr">
-      <div class="pay-plan" data-plan="starter" onclick="selectPayPlan(this)">
-        <div class="pp-name">Starter</div>
-        <div class="pp-price">$5.50<span style="font-size:11px;color:var(--muted);font-weight:500">/mo</span></div>
-        <div class="pp-note">GPT-4 · 20 replies/12h</div>
-      </div>
-      <div class="pay-plan selected" data-plan="pro_annual" onclick="selectPayPlan(this)">
-        <div class="pp-name">Pro · Annual</div>
-        <div class="pp-price">$19<span style="font-size:11px;color:var(--muted);font-weight:500">/mo</span></div>
-        <div class="pp-note">1 month free · $228/yr</div>
-      </div>
-      <div class="pay-plan" data-plan="max_annual" onclick="selectPayPlan(this)">
-        <div class="pp-name">Max · Annual</div>
-        <div class="pp-price">$90<span style="font-size:11px;color:var(--muted);font-weight:500">/mo</span></div>
-        <div class="pp-note">Unlimited · $1,080/yr</div>
-      </div>
-    </div>
-    <div class="pay-plan-row" style="grid-template-columns:1fr 1fr;max-width:340px;margin:0 auto 18px">
-      <div class="pay-plan" data-plan="pro_monthly" onclick="selectPayPlan(this)">
-        <div class="pp-name">Pro Monthly</div>
-        <div class="pp-price">$23<span style="font-size:10px;color:var(--muted);font-weight:500">/mo</span></div>
-        <div class="pp-note">Cancel anytime</div>
-      </div>
-      <div class="pay-plan" data-plan="max_monthly" onclick="selectPayPlan(this)">
-        <div class="pp-name">Max Monthly</div>
-        <div class="pp-price">$100<span style="font-size:10px;color:var(--muted);font-weight:500">/mo</span></div>
-        <div class="pp-note">Cancel anytime</div>
-      </div>
-    </div>
-
-    <div class="pay-requirement">
-      A valid payment method is required to start — this confirms your identity and enables automatic billing after the trial. You won't be charged during your free trial period on annual plans.
-    </div>
-
-    <button class="pay-cta" id="pay-cta" onclick="startCheckout()">
-      💳 Continue to Secure Checkout →
-    </button>
-
-    <div class="stripe-pill">
-      🔒 Payments secured by Stripe · PCI-DSS compliant
-    </div>
-    <div class="pay-skip-note">
-      By continuing, you authorize EZ Pilot to charge your card after the trial ends at the plan rate unless cancelled.
-    </div>
-  </div>
-</div>
-
-<!-- Discord Join Popup -->
-<div class="discord-popup" id="discord-popup" style="display:none">
-  <div style="background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.15);max-width:320px;text-align:center;animation:fade .3s ease">
-    <div style="width:48px;height:48px;border-radius:12px;background:#5865f2;color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:22px;font-weight:800">D</div>
-    <div style="font-size:17px;font-weight:800;letter-spacing:-0.01em">Join our Discord</div>
-    <div style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5">Get help, share feedback, and connect with other EZ Pilot users.</div>
-    <div style="display:flex;gap:8px;margin-top:16px">
-      <a href="https://discord.gg/KRPjz3m6" target="_blank" rel="noopener" style="flex:1;padding:11px;background:#5865f2;color:#fff;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;display:block">Join Discord</a>
-      <button onclick="dismissDiscord()" style="flex:1;padding:11px;background:#f5f5f5;color:var(--ink);border:1px solid var(--line);border-radius:10px;font-weight:600;font-size:13px;cursor:pointer">Skip</button>
-    </div>
-  </div>
-</div>
-<style>
-  .discord-popup{position:fixed;bottom:24px;right:24px;z-index:200;animation:slideUp .4s ease}
-  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-</style>
 
 <div class="app">
   <!-- ===== SIDEBAR ===== -->
@@ -1109,295 +900,27 @@
   async function gP(uid){ return secureGetJSON('ezp_p_'+uid); }
   async function sP(uid,d){ await secureSet('ezp_p_'+uid, JSON.stringify(d)); }
 
-  // Friendly error messages
-  function fErr(e){
-    const m={
-      'auth/email-already-in-use':'Email already in use. Try signing in.',
-      'auth/invalid-email':'Invalid email address.',
-      'auth/weak-password':'Password too weak (8+ characters required).',
-      'auth/user-not-found':'No account found. Try signing up.',
-      'auth/wrong-password':'Incorrect password.',
-      'auth/invalid-credential':'Invalid email or password.',
-      'auth/too-many-requests':'Too many attempts. Wait a few minutes.',
-      'auth/network-request-failed':'Network error. Check your connection.',
-      'auth/popup-closed-by-user':'Sign-in popup was closed.',
-      'auth/popup-blocked':'Popup blocked by browser. Allow popups for this site.',
-      'auth/invalid-verification-code':'Invalid verification code.',
-      'auth/code-expired':'Code expired. Request a new one.',
-    };
-    return m[e?.code]||e?.message||'Something went wrong. Please try again.';
-  }
 
-  // After successful auth
-  async function postAuth(user){
-    const email = user.email || user.phoneNumber || '';
-    const admin = isAdmin(email);
-    let profile = await gP(user.uid);
-    if(!profile.identifier){
-      profile = {identifier:email, fullName:user.displayName||email, displayName:user.displayName||email, bio:'', plan:admin?'admin':'free', subscriptionActive:admin};
+  // ===== SESSION GUARD — redirect to signin.html if not authed =====
+  (async function(){
+    const user = await secureGetJSON('ezp_user');
+    if(!user || !user.uid){
+      window.location.href = 'signin.html';
+      return;
     }
-    if(admin){ profile.subscriptionActive=true; profile.plan='max'; }
-    await sP(user.uid, profile);
-    await secureSet('ezp_user', JSON.stringify({uid:user.uid, identifier:email, fullName:profile.displayName, plan:profile.plan}));
+  })();
 
-    // Hide login overlay
-    document.getElementById('login-overlay').style.display='none';
-
-    // Reset login button state
-    const loginBtn = document.getElementById('login-cta');
-    if(loginBtn){ loginBtn.classList.remove('loading'); loginBtn.textContent='Sign In →'; }
-
-    // Check pending upgrade intent
-    checkUpgradeIntent();
-
-    // Show app or payment gate
-    if(admin || profile.subscriptionActive){
-      // User has access — go to home
-      goTo('home');
-      initApp();
-    } else {
-      // Show payment gate
-      document.getElementById('payment-overlay').classList.add('show');
-    }
-  }
-
-  // ===== NAV =====
-  const navItems = document.querySelectorAll('.nav-item');
-  const screens = document.querySelectorAll('.screen');
-  function goTo(id){
-    screens.forEach(s=>s.classList.toggle('active',s.id===id));
-    navItems.forEach(n=>n.classList.toggle('active',n.dataset.screen===id));
-    const content = document.querySelector('.content');
-    if(content) content.scrollTop=0;
-  }
-  navItems.forEach(n=>n.addEventListener('click',()=>goTo(n.dataset.screen)));
-
-  // ===== LOGIN UI =====
-  let authMode = 'login';
-  let loginTab = 'email';
-
-  function switchLoginTab(el, type){
-    document.querySelectorAll('.login-tab').forEach(t=>t.classList.remove('active'));
-    el.classList.add('active');
-    loginTab = type;
-    document.getElementById('email-fields').style.display = type==='email' ? 'block' : 'none';
-    document.getElementById('phone-fields').style.display = type==='phone' ? 'block' : 'none';
-    document.getElementById('otp-section').style.display = 'none';
-    hideLoginError();
-    if(type==='phone'){
-      document.getElementById('login-cta').textContent = 'Send verification code';
-    } else {
-      document.getElementById('login-cta').textContent = authMode==='signup' ? 'Create Account \u2192' : 'Sign In \u2192';
-    }
-  }
-
-  function toggleAuthMode(){
-    authMode = authMode==='login' ? 'signup' : 'login';
-    const nameField = document.getElementById('login-name');
-    const cta = document.getElementById('login-cta');
-    const txt = document.getElementById('auth-toggle-txt');
-    const btn = document.getElementById('auth-toggle-btn');
-    if(authMode==='signup'){
-      nameField.style.display='block'; cta.textContent='Create Account \u2192';
-      txt.textContent='Already have an account?'; btn.textContent='Sign in';
-    } else {
-      nameField.style.display='none'; cta.textContent='Sign In \u2192';
-      txt.textContent="Don\u2019t have an account?"; btn.textContent='Sign up';
-    }
-    hideLoginError();
-  }
-
-  function updateLoginButton(){
-    document.getElementById('login-cta').disabled = !document.getElementById('terms-accept').checked;
-  }
-  function showLoginError(msg){
-    const el=document.getElementById('login-error'); el.textContent=msg; el.classList.add('show');
-  }
-  function hideLoginError(){
-    const el=document.getElementById('login-error');
-    if(el) el.classList.remove('show');
-    document.querySelectorAll('.login-input.invalid').forEach(i=>i.classList.remove('invalid'));
-  }
-
-  function doSubmit(){
-    if(!document.getElementById('terms-accept').checked){
-      showLoginError('You must agree to Terms & Privacy.'); return;
-    }
-    if(loginTab==='phone') return doPhoneAuth();
-    if(authMode==='signup') return doEmailSignup();
-    return doEmailSignin();
-  }
-
-  // ===== EMAIL SIGN IN =====
-  async function doEmailSignin(){
-    hideLoginError();
-    const id = document.getElementById('login-id').value.trim();
-    const pw = document.getElementById('login-pw').value;
-    if(!id){document.getElementById('login-id').classList.add('invalid');showLoginError('Email is required.');return}
-    if(!pw||pw.length<8){document.getElementById('login-pw').classList.add('invalid');showLoginError('Password must be 8+ characters.');return}
-    const btn=document.getElementById('login-cta');
-    btn.classList.add('loading'); btn.textContent='Signing in\u2026';
-    try{
-      const remember=document.getElementById('remember-me')?.checked;
-      await fbAuth.setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
-      const cred = await fbAuth.signInWithEmailAndPassword(id, pw);
-      if(remember) secureSet('ezp_remember',id);
-      postAuth(cred.user);
-    }catch(err){
-      showLoginError(fErr(err));
-      btn.classList.remove('loading'); btn.textContent='Sign In \u2192';
-    }
-  }
-
-  // ===== EMAIL SIGN UP =====
-  async function doEmailSignup(){
-    hideLoginError();
-    const id=document.getElementById('login-id').value.trim();
-    const name=document.getElementById('login-name').value.trim();
-    const pw=document.getElementById('login-pw').value;
-    if(!name||name.length<2){document.getElementById('login-name').classList.add('invalid');showLoginError('Full name required.');return}
-    if(!id){document.getElementById('login-id').classList.add('invalid');showLoginError('Email required.');return}
-    if(!pw||pw.length<8){document.getElementById('login-pw').classList.add('invalid');showLoginError('Password must be 8+ characters.');return}
-    const btn=document.getElementById('login-cta');
-    btn.classList.add('loading'); btn.textContent='Creating account\u2026';
-    try{
-      const remember=document.getElementById('remember-me')?.checked;
-      await fbAuth.setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
-      const cred = await fbAuth.createUserWithEmailAndPassword(id, pw);
-      await cred.user.updateProfile({displayName:name});
-      if(remember) secureSet('ezp_remember',id);
-      postAuth(cred.user);
-    }catch(err){
-      showLoginError(fErr(err));
-      btn.classList.remove('loading'); btn.textContent='Create Account \u2192';
-    }
-  }
-
-  // ===== PHONE AUTH (reCAPTCHA + OTP) =====
-  let confirmationResult = null;
-  let recaptchaVerifier = null;
-  let otpSent = false;
-
-  async function doPhoneAuth(){
-    hideLoginError();
-    if(otpSent) return verifyOTP();
-    const phone=document.getElementById('phone-number').value.trim();
-    if(!phone){document.getElementById('phone-number').classList.add('invalid');showLoginError('Phone number required (e.g. +15551234567).');return}
-    const btn=document.getElementById('login-cta');
-    btn.classList.add('loading'); btn.textContent='Sending code\u2026';
-    try{
-      if(!recaptchaVerifier){
-        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size:'invisible'});
-      }
-      confirmationResult = await fbAuth.signInWithPhoneNumber(phone, recaptchaVerifier);
-      otpSent = true;
-      document.getElementById('otp-section').style.display='block';
-      btn.classList.remove('loading'); btn.textContent='Verify code \u2192';
-    }catch(err){
-      showLoginError(fErr(err));
-      btn.classList.remove('loading'); btn.textContent='Send verification code';
-      if(recaptchaVerifier){try{recaptchaVerifier.clear();}catch(e){} recaptchaVerifier=null;}
-    }
-  }
-
-  async function verifyOTP(){
-    hideLoginError();
-    const code=document.getElementById('otp-code').value.trim();
-    if(!code||code.length<6){document.getElementById('otp-code').classList.add('invalid');showLoginError('Enter the 6-digit code.');return}
-    const btn=document.getElementById('login-cta');
-    btn.classList.add('loading'); btn.textContent='Verifying\u2026';
-    try{
-      const result = await confirmationResult.confirm(code);
-      const remember=document.getElementById('remember-me')?.checked;
-      if(remember) secureSet('ezp_remember', result.user.phoneNumber||'');
-      postAuth(result.user);
-    }catch(err){
-      showLoginError(fErr(err));
-      btn.classList.remove('loading'); btn.textContent='Verify code \u2192';
-    }
-  }
-
-  // ===== GOOGLE SIGN IN =====
-  async function doGoogleSignIn(){
-    if(!document.getElementById('terms-accept').checked){showLoginError('Agree to Terms & Privacy first.');return}
-    hideLoginError();
-    try{
-      const remember=document.getElementById('remember-me')?.checked;
-      await fbAuth.setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
-      const cred = await fbAuth.signInWithPopup(googleProvider);
-      if(remember && cred.user.email) secureSet('ezp_remember', cred.user.email);
-      postAuth(cred.user);
-    }catch(err){showLoginError(fErr(err))}
-  }
-
-  // ===== MICROSOFT SIGN IN =====
-  async function doMicrosoftSignIn(){
-    if(!document.getElementById('terms-accept').checked){showLoginError('Agree to Terms & Privacy first.');return}
-    hideLoginError();
-    try{
-      const remember=document.getElementById('remember-me')?.checked;
-      await fbAuth.setPersistence(remember ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION);
-      const msProvider = new firebase.auth.OAuthProvider('microsoft.com');
-      msProvider.setCustomParameters({tenant:'common'});
-      const cred = await fbAuth.signInWithPopup(msProvider);
-      if(remember && cred.user.email) secureSet('ezp_remember', cred.user.email);
-      postAuth(cred.user);
-    }catch(err){showLoginError(fErr(err))}
-  }
-
+  // Session-aware logout → redirect to signin.html
   function logout(){
     fbAuth.signOut().catch(()=>{});
     secureRemove('ezp_token');
     secureRemove('ezp_user');
     secureRemove('ezp_remember');
-    // Reset UI
-    document.getElementById('login-overlay').style.display='flex';
-    document.getElementById('payment-overlay').classList.remove('show');
-    // Reset login form
-    const loginBtn = document.getElementById('login-cta');
-    if(loginBtn){ loginBtn.classList.remove('loading'); loginBtn.textContent='Sign In →'; loginBtn.disabled=true; }
-    const termsBox = document.getElementById('terms-accept');
-    if(termsBox) termsBox.checked = false;
-    hideLoginError();
-    // Reset phone OTP state
-    otpSent = false;
-    confirmationResult = null;
-    const otpSec = document.getElementById('otp-section');
-    if(otpSec) otpSec.style.display = 'none';
+    window.location.href = 'signin.html';
   }
 
-  // ===== AUTO-RESTORE SESSION =====
-  fbAuth.onAuthStateChanged(user=>{
-    if(user) postAuth(user);
-  });
-
-  // Pre-fill remembered email
-  (async function(){
-    const r = await secureGet('ezp_remember');
-    if(r){const el=document.getElementById('login-id');if(el)el.value=r}
-  })();
-
-  // ===== PAYMENT GATE =====
-  let selectedPayPlan='pro_annual';
-  const STRIPE_LINKS={
-    starter:      'https://buy.stripe.com/00w14o6q1cY3aU48j7ffy08',
-    pro_monthly:  'https://buy.stripe.com/8x26oIaGhcY37HS42Rffy06',
-    max_monthly:  'https://buy.stripe.com/4gMeVeaGh3ntbY8bvjffy07',
-    pro_annual:   'https://buy.stripe.com/cNicN67u54rx3rC2YNffy04',
-    max_annual:   'https://buy.stripe.com/dRmfZiaGhgaf0fq1UJffy03',
-  };
-  function selectPayPlan(el){
-    document.querySelectorAll('.pay-plan').forEach(p=>p.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedPayPlan=el.dataset.plan;
-  }
-  function startCheckout(){
-    const btn=document.getElementById('pay-cta');
-    btn.classList.add('loading'); btn.textContent='Opening Stripe\u2026';
-    localStorage.setItem('ezp_pending_plan',selectedPayPlan);
-    window.location.href=STRIPE_LINKS[selectedPayPlan];
-  }
-  (function checkStripeReturn(){
+  // Stripe return check
+  (function(){
     const p=new URLSearchParams(window.location.search);
     if(p.get('checkout')==='success'){
       const plan=localStorage.getItem('ezp_pending_plan');
@@ -1662,7 +1185,7 @@
     const user = await secureGetJSON('ezp_user');
     if(!user || !user.uid){
       // Not signed in — show login overlay
-      document.getElementById('login-overlay').style.display='flex';
+      window.location.href='signin.html';
       // Store intent so we can redirect after signin
       sessionStorage.setItem('ezp_upgrade_intent', plan);
       return;
