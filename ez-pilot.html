@@ -170,8 +170,9 @@
   .upgrade-btn{background:var(--yellow);color:var(--ink);border:1px solid var(--yellow-deep);padding:8px 14px;border-radius:10px;font-weight:700;font-size:12px}
 
   .content{flex:1;overflow-y:auto;padding:28px 36px}
-  .screen{display:none;animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
-  .screen.active{display:block}
+  .screen{display:none !important;animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+  .screen.active{display:block !important}
+  #chat.active{display:flex !important}
   @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
   .page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
@@ -389,7 +390,7 @@
     </div>
     <div class="user-row" onclick="logout()">
       <div class="user-avatar">A</div>
-      <div class="user-info"><div class="un">Alex Chen</div><div class="ue">alex@ez-pilot.com</div></div>
+      <div class="user-info"><div class="un" id="sidebar-username">Set your username</div><div class="ue" id="sidebar-email"></div></div>
       <div class="logout-icon">⏻</div>
     </div>
   </aside>
@@ -857,10 +858,19 @@
     if(user && user.uid){
       _currentUser = user;
     }
-    // If Firebase is loaded, also listen for auth state
+    // Update sidebar with session data
+    const un = document.getElementById('sidebar-username');
+    const ue = document.getElementById('sidebar-email');
+    if(user && user.fullName && un) un.textContent = user.fullName;
+    if(user && user.identifier && ue) ue.textContent = user.identifier;
+    // Firebase auth state
     if(typeof fbAuth !== 'undefined'){
       fbAuth.onAuthStateChanged(u => {
-        if(u) _currentUser = {uid:u.uid, identifier:u.email||u.phoneNumber||''};
+        if(u){
+          _currentUser = {uid:u.uid, identifier:u.email||u.phoneNumber||''};
+          if(un && u.displayName) un.textContent = u.displayName;
+          if(ue) ue.textContent = u.email || u.phoneNumber || '';
+        }
       });
     }
   })();
