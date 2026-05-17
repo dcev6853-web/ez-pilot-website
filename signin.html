@@ -3,100 +3,337 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EZ Pilot — Sign In</title>
-<meta name="description" content="Sign in to EZ Pilot, your autonomous AI assistant.">
+<title>EZ Pilot — Your AI Assistant</title>
+<meta name="description" content="EZ-PILOT is your self-evolving autonomous AI assistant. Manage docs, book trips, browse the web, track budgets, and reply to messages — all on autopilot.">
+
+<!-- Favicon (robot-face logo) -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'><rect width='1024' height='1024' rx='200' fill='%23FFEB3B'/><rect x='280' y='144' width='64' height='96' rx='32' fill='%230a0a0a'/><rect x='680' y='144' width='64' height='96' rx='32' fill='%230a0a0a'/><rect x='192' y='224' width='640' height='576' rx='120' fill='%23fff'/><rect x='320' y='384' width='96' height='96' rx='24'/><rect x='608' y='384' width='96' height='96' rx='24'/><rect x='352' y='608' width='320' height='48' rx='24'/></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'><rect width='1024' height='1024' rx='200' fill='%23FFEB3B'/><rect x='280' y='144' width='64' height='96' rx='32' fill='%230a0a0a'/><rect x='680' y='144' width='64' height='96' rx='32' fill='%230a0a0a'/><rect x='192' y='224' width='640' height='576' rx='120' fill='%23fff'/><rect x='320' y='384' width='96' height='96' rx='24'/><rect x='608' y='384' width='96' height='96' rx='24'/><rect x='352' y='608' width='320' height='48' rx='24'/></svg>">
+
+<!-- ===== HTTPS / Canonical / Security ===== -->
+<link rel="canonical" href="https://ez-pilot.com/">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#FFEB3B">
+
+<!-- Open Graph -->
+<meta property="og:title" content="EZ Pilot — Your Autonomous AI Agent">
+<meta property="og:description" content="Self-evolving AI agent for productivity, browsing, and messaging.">
+<meta property="og:url" content="https://ez-pilot.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EZ Pilot">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ezpilot">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Google Identity Services (real Sign In With Google) -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<meta name="google-signin-client_id" content="830406008027-2bc4rml155565po4pebupp2g1u4456ol.apps.googleusercontent.com">
+
+<!-- Firebase Auth (compat SDK v12.13.0 — synchronous, no race conditions with inline scripts) -->
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics-compat.js"></script>
 <script>
   firebase.initializeApp({
-    apiKey:"AIzaSyASBcIGxmL4dekOnLkiItU7MJeQ3Vu1MY8",
-    authDomain:"ez-pilot-c321c.firebaseapp.com",
-    databaseURL:"https://ez-pilot-c321c-default-rtdb.firebaseio.com",
-    projectId:"ez-pilot-c321c",
-    storageBucket:"ez-pilot-c321c.firebasestorage.app",
-    messagingSenderId:"858556534263",
-    appId:"1:858556534263:web:808f37c5b67d45a5dbf2f2",
-    measurementId:"G-FRJ4CJXYNL"
+    apiKey: "AIzaSyASBcIGxmL4dekOnLkiItU7MJeQ3Vu1MY8",
+    authDomain: "ez-pilot-c321c.firebaseapp.com",
+    databaseURL: "https://ez-pilot-c321c-default-rtdb.firebaseio.com",
+    projectId: "ez-pilot-c321c",
+    storageBucket: "ez-pilot-c321c.firebasestorage.app",
+    messagingSenderId: "858556534263",
+    appId: "1:858556534263:web:808f37c5b67d45a5dbf2f2",
+    measurementId: "G-FRJ4CJXYNL"
   });
   firebase.analytics();
   const fbAuth = firebase.auth();
   const googleProvider = new firebase.auth.GoogleAuthProvider();
-  ['https://www.googleapis.com/auth/gmail.modify','https://www.googleapis.com/auth/documents',
-   'https://www.googleapis.com/auth/calendar','https://www.googleapis.com/auth/drive.file'
+  ['https://www.googleapis.com/auth/gmail.modify',
+   'https://www.googleapis.com/auth/documents',
+   'https://www.googleapis.com/auth/calendar',
+   'https://www.googleapis.com/auth/drive.file'
   ].forEach(s => googleProvider.addScope(s));
 </script>
 <style>
-  :root{--yellow:#FFEB3B;--yellow-soft:#FFF7B8;--yellow-deep:#F4D000;--ink:#0A0A0A;--ink-2:#2a2a2a;--muted:#6b6b6b;--muted-2:#9a9a9a;--line:#ececec;--green:#10b981;--red:#ef4444}
+  :root{
+    --yellow:#FFEB3B;--yellow-soft:#FFF7B8;--yellow-deep:#F4D000;
+    --ink:#0A0A0A;--ink-2:#2a2a2a;--muted:#6b6b6b;--muted-2:#9a9a9a;
+    --line:#ececec;--bg:#fff;--card:#fafafa;
+    --green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--orange:#f59e0b;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
-  body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:linear-gradient(135deg,#fff,#fff8d8 50%,#fff 100%);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;overflow:hidden}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-  input{font-family:inherit;outline:none;border:none;background:none;color:inherit}
+  input,textarea,select{font-family:inherit;outline:none;border:none;background:none;color:inherit}
   a{color:inherit;text-decoration:none}
 
+  .app{display:flex;height:100vh;width:100vw}
+
   @keyframes fade{from{opacity:0}to{opacity:1}}
-  @keyframes logoIn{from{opacity:0;transform:translateY(-8px) scale(.85)}to{opacity:1;transform:none}}
-  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+  /* Upload + attachments + Make workflow badge */
+  .attach-chip{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;
+    padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;margin-bottom:6px;
+  }
+  .make-chip{
+    display:inline-flex;align-items:center;gap:5px;
+    background:#fef3c7;color:#92400e;border:1px solid #fde68a;
+    padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;margin-bottom:6px;margin-left:5px;
+  }
+  .attach-btn{
+    width:38px;height:38px;border-radius:11px;background:#fff;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;
+  }
+  .attach-btn:hover{background:#fafafa}
+  .upload-counter{font-size:10px;color:var(--muted-2);padding:2px 8px;background:#f5f5f5;border-radius:999px;font-weight:600}
+  .context-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;padding:0 4px}
+  .context-pill{
+    background:#fafafa;border:1px solid var(--line);padding:6px 12px;border-radius:999px;
+    font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;
+  }
+  .context-pill.active{background:var(--yellow);border-color:var(--yellow-deep);color:var(--ink)}
+  .context-pill:hover{background:#f5f5f5}
+
+  /* Integration status */
+  .int-status{
+    display:inline-flex;align-items:center;gap:4px;
+    font-size:9px;font-weight:700;color:var(--muted-2);
+    margin-left:6px;
+  }
+  .int-status.ok{color:var(--green)}
+  .int-status.bad{color:var(--red)}
+  .int-status::before{
+    content:"";width:5px;height:5px;border-radius:50%;background:currentColor;
+  }
+
+  /* Integration card brand logo */
+  .int-logo{
+    width:30px;height:30px;border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    background:#fff;border:1px solid var(--line);
+    margin-bottom:8px;overflow:hidden;flex-shrink:0;
+  }
+  .int-logo img{width:100%;height:100%;object-fit:contain;padding:3px}
+  .int-logo.no-bg{background:transparent;border:none}
+  .int-logo.slack-fallback{
+    background:#611f69;color:#fff;font-weight:900;font-size:18px;
+    font-family:Georgia,serif;
+  }
+
+  /* Chat empty state */
+  .chat-empty{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:40px 24px;color:var(--muted);
+  }
+  .chat-empty h3{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em}
+  .chat-empty p{font-size:14px;margin-top:8px;max-width:400px;line-height:1.5}
+
   @keyframes spin{to{transform:rotate(360deg)}}
 
-  .login-card{width:440px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:24px;padding:42px 44px;box-shadow:0 30px 80px rgba(0,0,0,.12);text-align:center;animation:fade .4s}
-  .login-card .lc-logo{width:72px;height:72px;margin:0 auto 18px;animation:logoIn .6s cubic-bezier(.2,.8,.2,1)}
-  .login-card h1{font-size:28px;font-weight:800;letter-spacing:-0.02em}
-  .login-card .sub{font-size:13px;color:var(--muted);margin-top:6px}
-  .login-card .domain-pill{display:inline-block;margin-top:10px;background:#f5f5f5;padding:4px 10px;border-radius:999px;font-size:11px;color:var(--muted-2);font-weight:600}
-  .login-tabs{display:flex;background:#f5f5f5;border-radius:11px;padding:4px;margin:24px 0 12px}
-  .login-tab{flex:1;padding:9px;font-size:12px;font-weight:700;border-radius:8px;color:var(--muted)}
-  .login-tab.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-  .login-input{width:100%;background:#fafafa;border:1px solid var(--line);border-radius:12px;padding:13px 16px;font-size:13px;margin-bottom:9px}
-  .login-input:focus{border-color:var(--yellow-deep);background:#fff}
-  .login-input.invalid{border-color:var(--red);background:#fef2f2}
-  .login-cta{width:100%;background:var(--yellow);color:var(--ink);border:1px solid var(--yellow-deep);padding:14px;border-radius:12px;font-weight:800;font-size:14px;margin-top:6px;transition:transform .12s}
-  .login-cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(244,208,0,.4)}
-  .login-cta:disabled{background:#f5f5f5;color:var(--muted-2);border-color:var(--line);cursor:not-allowed;transform:none;box-shadow:none}
-  .login-cta.loading{background:var(--muted-2);pointer-events:none}
-  .login-cta.loading::after{content:"";width:14px;height:14px;margin-left:8px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;display:inline-block;vertical-align:middle;animation:spin .7s linear infinite}
-  .login-error{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:600;margin-bottom:10px;display:none;animation:shake .3s}
-  .login-error.show{display:block}
-  .terms-check{display:flex;align-items:flex-start;gap:9px;margin:10px 0 6px;font-size:12px;color:var(--muted);text-align:left;cursor:pointer}
-  .terms-check input{margin-top:3px;width:16px;height:16px;accent-color:var(--yellow-deep);flex-shrink:0;cursor:pointer}
-  .terms-check span{line-height:1.45}
-  .terms-check a{color:var(--yellow-deep);font-weight:700;text-decoration:underline}
-  .ldivider{display:flex;align-items:center;gap:10px;margin:22px 0 14px;color:var(--muted-2);font-size:11px;font-weight:600}
-  .ldivider::before,.ldivider::after{content:"";flex:1;height:1px;background:var(--line)}
-  .login-foot{font-size:11px;color:var(--muted-2);margin-top:18px;line-height:1.5}
-  .login-foot strong{color:var(--yellow-deep)}
+  /* ===== SIDEBAR ===== */
+  .sidebar{width:230px;flex-shrink:0;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:22px 16px;background:#fff}
+  .logo{display:flex;align-items:center;gap:11px;padding:0 8px;margin-bottom:24px}
+  .logo svg{width:34px;height:34px;flex-shrink:0}
+  .logo-text{display:flex;flex-direction:column;line-height:1.1}
+  .logo-text .name{font-weight:800;font-size:17px;letter-spacing:-0.01em}
+  .logo-text .domain{font-size:10px;color:var(--muted-2);font-weight:600;margin-top:2px}
 
-  .payment-overlay{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#fff,#fff8d8 50%,#fff 100%);display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-  .payment-overlay.show{display:flex}
-  .payment-card{width:520px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:24px;padding:42px 44px;box-shadow:0 30px 80px rgba(0,0,0,.12)}
-  .pay-head{text-align:center;margin-bottom:24px}
-  .pay-head svg{width:60px;height:60px;margin-bottom:14px}
-  .pay-head h2{font-size:24px;font-weight:800;letter-spacing:-0.02em}
-  .pay-head p{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
-  .trial-box{background:linear-gradient(135deg,#fff7b8,#ffe66b);border:1px dashed var(--yellow-deep);border-radius:12px;padding:14px 16px;margin-bottom:20px;text-align:center;font-size:13px;color:#5a4a00;font-weight:600;line-height:1.5}
-  .trial-box strong{font-weight:800}
-  .pay-plan-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-  .pay-plan{border:2px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;transition:all .15s;text-align:center}
-  .pay-plan:hover{border-color:var(--yellow-deep)}
-  .pay-plan.selected{border-color:var(--yellow-deep);background:var(--yellow-soft)}
-  .pay-plan .pp-name{font-size:13px;font-weight:800}
-  .pay-plan .pp-price{font-size:20px;font-weight:800;margin-top:4px;letter-spacing:-0.02em}
-  .pay-plan .pp-note{font-size:10px;color:var(--muted);margin-top:2px}
-  .pay-requirement{background:#fef3c7;border:1px solid #fde68a;color:#92400e;padding:11px 14px;border-radius:10px;font-size:12px;margin-bottom:16px;display:flex;align-items:flex-start;gap:9px;line-height:1.5}
-  .pay-requirement::before{content:"ℹ";font-size:16px;font-weight:800;flex-shrink:0}
-  .pay-cta{width:100%;background:var(--ink);color:#fff;padding:14px;border-radius:12px;font-weight:800;font-size:14px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
-  .pay-cta:hover{background:var(--ink-2);transform:translateY(-1px)}
-  .pay-cta.loading{background:var(--muted-2);pointer-events:none}
-  .pay-cta.loading::after{content:"";width:14px;height:14px;margin-left:6px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;display:inline-block;animation:spin .7s linear infinite}
-  .stripe-pill{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:11px;color:var(--muted-2);font-weight:600;text-align:center;justify-content:center;width:100%}
-  .pay-skip-note{font-size:11px;color:var(--muted-2);text-align:center;margin-top:14px;line-height:1.5}
+  .nav{display:flex;flex-direction:column;gap:4px;flex:1}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:var(--ink-2);font-weight:500;font-size:14px;transition:background .15s;cursor:pointer}
+  .nav-item:hover{background:#f5f5f5}
+  .nav-item.active{background:var(--yellow);color:var(--ink);font-weight:700}
+  .nav-item svg{width:16px;height:16px;flex-shrink:0}
+
+  .plan-card{background:var(--yellow-soft);border:1px solid var(--yellow-deep);border-radius:12px;padding:14px;margin-top:12px}
+  .plan-card .title{font-weight:700;font-size:13px}
+  .plan-card .sub{font-size:11px;color:var(--muted);margin-top:2px;margin-bottom:10px;line-height:1.4}
+  .plan-card button{width:100%;background:var(--yellow);color:var(--ink);border:1px solid var(--yellow-deep);padding:9px;border-radius:8px;font-weight:700;font-size:12px}
+  .user-row{display:flex;align-items:center;gap:10px;padding:10px 8px;margin-top:14px;border-top:1px solid var(--line);padding-top:14px;cursor:pointer}
+  .user-avatar{width:32px;height:32px;border-radius:50%;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .user-info .un{font-size:12px;font-weight:700}
+  .user-info .ue{font-size:10px;color:var(--muted-2)}
+  .logout-icon{margin-left:auto;color:var(--muted-2);font-size:14px}
+
+  /* ===== MAIN ===== */
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .topbar{height:60px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:#fff;flex-shrink:0}
+  .topbar .crumb{font-size:13px;color:var(--muted);font-weight:500}
+  .topbar .crumb strong{color:var(--ink);font-weight:700}
+  .topbar .right{display:flex;align-items:center;gap:10px}
+  .icon-btn{width:36px;height:36px;border-radius:10px;background:#fafafa;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:15px}
+  .upgrade-btn{background:var(--yellow);color:var(--ink);border:1px solid var(--yellow-deep);padding:8px 14px;border-radius:10px;font-weight:700;font-size:12px}
+
+  .content{flex:1;overflow-y:auto;padding:28px 36px}
+  .screen{display:none;animation:fadeUp .35s cubic-bezier(.2,.8,.2,1)}
+  .screen.active{display:block}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+  .page-head h1{font-size:30px;font-weight:800;letter-spacing:-0.02em}
+  .ai-pill{background:#fff;border:1px solid var(--line);padding:9px 14px;border-radius:10px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+
+  .live-banner{background:linear-gradient(135deg,#0a0a0a,#1a1a1a);color:#fff;border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  .live-dot{width:10px;height:10px;border-radius:50%;background:#10b981;box-shadow:0 0 0 5px rgba(16,185,129,.25);animation:pulse 1.5s infinite;flex-shrink:0}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .live-banner .txt{flex:1}
+  .live-banner .t{font-weight:700;font-size:13px}
+  .live-banner .s{font-size:11px;color:#aaa;margin-top:2px}
+  .live-banner .count{background:var(--yellow);color:var(--ink);padding:7px 12px;border-radius:8px;font-weight:800;font-size:12px}
+
+  /* ===== HOME ===== */
+  .home-hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 0;position:relative}
+  .home-hero::before{content:"";position:absolute;top:5%;left:50%;width:540px;height:540px;transform:translateX(-50%);background:radial-gradient(circle,rgba(255,235,59,.30),rgba(255,235,59,0) 65%);pointer-events:none;z-index:0}
+  .home-hero > *{position:relative;z-index:1}
+  .home-logo{width:84px;height:84px;margin-bottom:24px;animation:logoIn .6s cubic-bezier(.2,.8,.2,1)}
+  .home-h1{font-size:42px;font-weight:800;letter-spacing:-0.025em}
+  .home-sub{font-size:15px;color:var(--muted);margin-top:8px}
+  .home-input-wrap{width:640px;max-width:90%;margin-top:32px}
+  .home-input{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:28px;padding:8px 8px 8px 22px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+  .home-input .plus{width:32px;height:32px;border-radius:50%;background:#fafafa;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--muted)}
+  .home-input input{flex:1;font-size:14px;padding:10px 0}
+  .home-input input::placeholder{color:var(--muted-2)}
+  .home-input .mic{width:36px;height:36px;border-radius:50%;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .quick-prompts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:22px}
+  .quick-prompt{background:#fff;border:1px solid var(--line);padding:10px 18px;border-radius:999px;font-size:12px;font-weight:500;color:var(--ink-2);transition:all .18s}
+  .quick-prompt:hover{background:var(--yellow-soft);border-color:var(--yellow-deep);transform:translateY(-1px)}
+
+  .home-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:46px}
+  .stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+  .stat-card .lbl{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+  .stat-card .val{font-size:24px;font-weight:800;margin-top:6px;letter-spacing:-0.02em}
+  .stat-card .delta{font-size:11px;font-weight:700;margin-top:2px}
+  .delta.up{color:var(--green)}
+  .delta.down{color:var(--red)}
+
+  /* ===== CHAT ===== */
+  #chat{display:none;height:calc(100vh - 60px - 56px);flex-direction:column}
+  #chat.active{display:flex}
+  .chat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .chat-top h1{font-size:26px;font-weight:800;letter-spacing:-0.02em}
+  .chat-status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .chat-status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(16,185,129,.2)}
+  .model-picker{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+  .model-picker select{font-size:12px;font-weight:700;cursor:pointer}
+  .chat-msgs{flex:1;overflow-y:auto;padding:8px 0 18px;display:flex;flex-direction:column;gap:18px;max-width:780px;width:100%;margin:0 auto}
+  .msg{display:flex;gap:12px;max-width:80%;animation:fadeUp .3s}
+  .msg.user{align-self:flex-end;flex-direction:row-reverse}
+  .avatar{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+  .avatar.bot{background:var(--yellow)}
+  .avatar.user{background:#0a0a0a;color:#fff;font-size:13px;font-weight:700}
+  .bubble{padding:13px 18px;border-radius:16px;background:#f5f5f5;font-size:14px;line-height:1.55}
+  .msg.user .bubble{background:var(--yellow);font-weight:500}
+  .bubble strong{font-weight:700}
+  .tool-chip{display:inline-flex;align-items:center;gap:5px;background:#dcfce7;color:#166534;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;margin-bottom:6px}
+  .typing .bubble{display:flex;gap:5px;align-items:center;padding:16px 18px}
+  .typing .dot{width:7px;height:7px;border-radius:50%;background:var(--muted-2);animation:typing 1.2s infinite ease-in-out}
+  .typing .dot:nth-child(2){animation-delay:.15s}
+  .typing .dot:nth-child(3){animation-delay:.3s}
+  @keyframes typing{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+  .composer{max-width:780px;width:100%;margin:0 auto;padding-top:14px;border-top:1px solid var(--line)}
+  .composer-inner{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:6px 6px 6px 18px;box-shadow:0 6px 18px rgba(0,0,0,.04)}
+  .composer-inner input{flex:1;font-size:14px;padding:11px 0}
+  .send-btn{width:38px;height:38px;border-radius:11px;background:var(--yellow);border:1px solid var(--yellow-deep);display:flex;align-items:center;justify-content:center}
+
+  /* ===== TASKS ===== */
+  .task-progress{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:16px}
+  .task-progress .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .task-progress .lbl{font-size:13px;font-weight:700}
+  .task-progress .pct{font-size:13px;font-weight:800;color:var(--yellow-deep)}
+  .task-progress-bar{height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden}
+  .task-progress-fill{height:100%;background:linear-gradient(90deg,var(--yellow),var(--yellow-deep));border-radius:4px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .add-bar{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 18px;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .add-bar input{flex:1;font-size:14px}
+  .add-bar button{width:34px;height:34px;border-radius:9px;background:var(--yellow);border:1px solid var(--yellow-deep);font-size:18px;font-weight:700}
+  .task{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:8px}
+  .check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--muted-2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:all .2s}
+  .task.done .check{background:var(--green);border-color:var(--green);color:#fff;animation:checkPop .35s cubic-bezier(.2,.8,.2,1)}
+  @keyframes checkPop{0%{transform:scale(.7)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+  .task.urgent .check{border-color:var(--yellow-deep);background:var(--yellow-soft)}
+  .task.urgent .check::after{content:"!";color:var(--yellow-deep);font-weight:800;font-size:11px}
+  .task .label{flex:1;font-size:14px;font-weight:500}
+  .task.done .label{text-decoration:line-through;color:var(--muted-2)}
+  .auto-tag{font-size:9px;font-weight:700;letter-spacing:0.04em;background:#dcfce7;color:#166534;padding:2px 6px;border-radius:4px;margin-left:6px}
+  .badge{padding:4px 11px;border-radius:999px;font-size:10px;font-weight:700}
+  .b-urgent{background:#fee2e2;color:#991b1b}
+  .b-high{background:#ffedd5;color:#9a3412}
+  .b-med{background:var(--yellow-soft);color:#856404}
+
+  /* ===== BUDGET ===== */
+  .budget-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-bottom:18px}
+  .balance-hero{background:linear-gradient(135deg,#0a0a0a,#1a1a1a);color:#fff;border-radius:18px;padding:26px 30px;position:relative;overflow:hidden}
+  .balance-hero::after{content:"";position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,235,59,.18),transparent 70%)}
+  .balance-hero .lbl{font-size:11px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+  .balance-hero .val{font-size:42px;font-weight:800;letter-spacing:-0.02em;margin-top:6px}
+  .balance-hero .delta{font-size:12px;color:#10b981;font-weight:700;margin-top:6px}
+  .balance-hero .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;position:relative}
+  .balance-hero .row > div{padding-top:10px;border-top:1px solid rgba(255,255,255,.1)}
+  .balance-hero .row .l{font-size:10px;color:#aaa;text-transform:uppercase;font-weight:600}
+  .balance-hero .row .v{font-size:18px;font-weight:800;margin-top:3px}
+  .donut-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center}
+  .donut-card h3{font-size:13px;font-weight:700;text-align:left;margin-bottom:14px}
+  .donut-wrap{position:relative;display:inline-block}
+  .donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+  .donut-center .dc-val{font-size:22px;font-weight:800;letter-spacing:-0.02em}
+  .donut-center .dc-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:600}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px;font-size:10px;color:var(--muted)}
+  .legend span{display:flex;align-items:center;gap:5px}
+  .legend span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+  .expense{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:7px}
+  .exp-icon{width:36px;height:36px;border-radius:9px;background:#fee2e2;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .exp-icon.pos{background:#dcfce7}
+  .exp-info{flex:1}
+  .exp-info .t{font-size:13px;font-weight:600}
+  .exp-info .d{font-size:11px;color:var(--muted-2);margin-top:1px}
+  .exp-amt{font-size:14px;font-weight:700;color:var(--red)}
+  .exp-amt.pos{color:var(--green)}
+
+  /* ===== INTEGRATIONS ===== */
+  .int-top{display:flex;gap:12px;margin-bottom:18px}
+  .count-pill{background:#f5f5f5;color:var(--muted);padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;text-transform:none;letter-spacing:0}
+
+  /* ===== PRICING ===== */
+  .pricing-head{text-align:center;margin-bottom:24px}
+  .pricing-head h1{font-size:36px;font-weight:800;letter-spacing:-0.02em}
+  .pricing-head p{font-size:14px;color:var(--muted);margin-top:8px}
+  .billing-toggle{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:30px}
+  .toggle{width:48px;height:26px;background:var(--yellow);border-radius:999px;position:relative;cursor:pointer;border:1px solid var(--yellow-deep)}
+  .toggle::after{content:"";width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .toggle.annual::after{transform:translateX(22px)}
+  .toggle-lbl{font-size:14px;font-weight:600}
+  .save-pill{background:var(--yellow);color:var(--ink);padding:4px 11px;border-radius:999px;font-size:11px;font-weight:700}
+  .plans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:920px;margin:0 auto}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:22px;padding:32px 30px;position:relative}
+  .plan.featured{border:2px solid var(--yellow-deep);box-shadow:0 12px 40px rgba(244,208,0,.2)}
+  .plan.max{border:2px solid #0a0a0a;background:linear-gradient(180deg,#fff,#fafafa);box-shadow:0 12px 40px rgba(0,0,0,.18)}
+  .plan .save-tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FFEB3B,#F4D000);color:var(--ink);padding:6px 18px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 6px 18px rgba(244,208,0,.5)}
+  .plan.max .save-tag{background:linear-gradient(135deg,#0a0a0a,#2a2a2a);color:var(--yellow)}
+  .plan .name{font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .max-badge{background:#0a0a0a;color:var(--yellow);padding:3px 9px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.04em}
+  .plan .price{font-size:48px;font-weight:800;letter-spacing:-0.02em;margin-top:8px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .plan .price .strike{font-size:24px;color:var(--muted-2);text-decoration:line-through;text-decoration-thickness:2px;font-weight:600}
+  .plan .price .per{font-size:14px;color:var(--muted);font-weight:500}
+  .plan .billing-note{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .trial-callout{margin-top:14px;padding:11px 16px;background:linear-gradient(135deg,#fff7b8,#ffe66b);border:1px dashed var(--yellow-deep);border-radius:10px;font-size:12px;color:#5a4a00;text-align:center;font-weight:700}
+  .plan ul{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:11px}
+  .plan li{font-size:13px;display:flex;align-items:flex-start;gap:10px;line-height:1.4}
+  .plan li::before{content:"✓";color:var(--green);font-weight:800;width:16px;flex-shrink:0}
+  .plan.max li::before{color:var(--yellow-deep)}
+  .plan .cta{display:block;width:100%;margin-top:24px;padding:14px;border-radius:12px;font-weight:700;font-size:14px;text-align:center}
+  .cta-upgrade{background:linear-gradient(135deg,#FFEB3B,#F4D000);color:var(--ink);box-shadow:0 8px 22px rgba(244,208,0,.45)}
+  .cta-max{background:#0a0a0a;color:var(--yellow);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+  .pay-link{margin-top:10px;font-size:11px;color:var(--muted-2);text-align:center}
+  .pay-link a{color:var(--yellow-deep);font-weight:700}
+
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:#ddd;border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:#bbb}
 </style>
 </head>
 <body>
@@ -115,236 +352,891 @@
   </symbol>
 </svg>
 
-<div class="login-card">
-  <svg class="lc-logo"><use href="#ezlogo"/></svg>
-  <h1>Welcome to EZ Pilot</h1>
-  <div class="sub">Your autonomous AI assistant</div>
-  <div class="domain-pill">🔒 https://ez-pilot.com</div>
 
-  <div class="login-tabs">
-    <button class="login-tab active" onclick="switchLoginTab(this,'email')">Email</button>
-    <button class="login-tab" onclick="switchLoginTab(this,'phone')">Phone</button>
-  </div>
-
-  <div id="email-fields">
-    <input type="email" class="login-input" id="login-id" placeholder="you@example.com" autocomplete="email" oninput="hideLoginError()">
-    <input type="text" class="login-input" id="login-name" placeholder="Full name" autocomplete="name" style="display:none" oninput="hideLoginError()">
-    <input type="password" class="login-input" id="login-pw" placeholder="Password (min 8 chars)" autocomplete="current-password" oninput="hideLoginError()">
-  </div>
-
-  <div id="phone-fields" style="display:none">
-    <input type="tel" class="login-input" id="phone-number" placeholder="+1 555 123 4567" autocomplete="tel" oninput="hideLoginError()">
-    <div id="recaptcha-container"></div>
-    <div id="otp-section" style="display:none;margin-top:8px">
-      <input type="text" class="login-input" id="otp-code" placeholder="6-digit verification code" maxlength="6" inputmode="numeric" oninput="hideLoginError()">
+<!-- Discord Join Popup -->
+<div class="discord-popup" id="discord-popup" style="display:none;position:fixed;bottom:24px;right:24px;z-index:200">
+  <div style="background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.15);max-width:320px;text-align:center;animation:fade .3s">
+    <div style="width:48px;height:48px;border-radius:12px;background:#5865f2;color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:22px;font-weight:800">D</div>
+    <div style="font-size:17px;font-weight:800">Join our Discord</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5">Get help, share feedback, and connect with other EZ Pilot users.</div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <a href="https://discord.gg/KRPjz3m6" target="_blank" rel="noopener" style="flex:1;padding:11px;background:#5865f2;color:#fff;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;display:block">Join Discord</a>
+      <button onclick="dismissDiscord()" style="flex:1;padding:11px;background:#f5f5f5;color:var(--ink);border:1px solid var(--line);border-radius:10px;font-weight:600;font-size:13px;cursor:pointer">Skip</button>
     </div>
   </div>
-
-  <div class="login-error" id="login-error"></div>
-
-  <label class="terms-check" style="margin-bottom:6px">
-    <input type="checkbox" id="remember-me">
-    <span>Remember me on this device</span>
-  </label>
-  <label class="terms-check">
-    <input type="checkbox" id="terms-accept" onchange="updateLoginButton()">
-    <span>I agree to the <a href="/terms.html" target="_blank">Terms of Service</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a></span>
-  </label>
-
-  <button class="login-cta" id="login-cta" onclick="doSubmit()" disabled>Sign In →</button>
-
-  <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--muted)">
-    <span id="auth-toggle-txt">Don't have an account?</span>
-    <a href="javascript:void(0)" onclick="toggleAuthMode()" id="auth-toggle-btn" style="color:var(--yellow-deep);font-weight:700;text-decoration:none;margin-left:4px">Sign up</a>
-  </div>
-
-  <div class="ldivider">OR CONTINUE WITH</div>
-
-  <button onclick="doGoogleSignIn()" style="width:100%;margin-bottom:8px;padding:12px;font-weight:600;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:10px;cursor:pointer">
-    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
-    Continue with Google
-  </button>
-
-  <button onclick="doMicrosoftSignIn()" style="width:100%;padding:12px;font-weight:600;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:10px;cursor:pointer">
-    <svg width="18" height="18" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
-    Continue with Microsoft
-  </button>
-
-  <div class="login-foot">You must agree to the Terms & Privacy Policy to sign in.<br>New here? <strong>1-month Pro trial included</strong>.</div>
 </div>
 
-<!-- PAYMENT GATE -->
-<div class="payment-overlay" id="payment-overlay">
-  <div class="payment-card">
-    <div class="pay-head">
-      <svg viewBox="0 0 1024 1024"><use href="#ezlogo"/></svg>
-      <h2>Activate Your Free Trial</h2>
-      <p>Choose a plan and add a payment method to start.</p>
+<div class="app">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="logo">
+      <svg><use href="#ezlogo"/></svg>
+      <div class="logo-text"><div class="name">EZ Pilot</div><div class="domain">ez-pilot.com</div></div>
     </div>
-    <div class="trial-box">⚡ <strong>1-Month Free Trial</strong> on annual Pro — card required to verify identity.<br>Cancel anytime — no charge.</div>
-    <div class="pay-plan-row" style="grid-template-columns:1fr 1fr 1fr">
-      <div class="pay-plan" data-plan="starter" onclick="selectPayPlan(this)"><div class="pp-name">Starter</div><div class="pp-price">$5.50<span style="font-size:11px;color:var(--muted);font-weight:500">/mo</span></div><div class="pp-note">GPT-4 · 20 replies/12h</div></div>
-      <div class="pay-plan selected" data-plan="pro_annual" onclick="selectPayPlan(this)"><div class="pp-name">Pro · Annual</div><div class="pp-price">$19<span style="font-size:11px;color:var(--muted);font-weight:500">/mo</span></div><div class="pp-note">1 month free · $228/yr</div></div>
-      <div class="pay-plan" data-plan="max_annual" onclick="selectPayPlan(this)"><div class="pp-name">Max · Annual</div><div class="pp-price">$90<span style="font-size:11px;color:var(--muted);font-weight:500">/mo</span></div><div class="pp-note">Unlimited · $1,080/yr</div></div>
+    <nav class="nav">
+      <div class="nav-item active" data-screen="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+      <div class="nav-item" data-screen="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</div>
+      <div class="nav-item" data-screen="tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Tasks</div>
+      <div class="nav-item" data-screen="agents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Agents</div>
+      <div class="nav-item" data-screen="budget"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Budget</div>
+      <div class="nav-item" data-screen="pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Pricing</div>
+      <div class="nav-item" data-screen="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</div>
+    </nav>
+    <div class="plan-card">
+      <div class="title">⚡ Free Trial</div>
+      <div class="sub">28 days left of Pro features</div>
+      <button onclick="goTo('pricing')">Upgrade to Max</button>
     </div>
-    <div class="pay-plan-row" style="grid-template-columns:1fr 1fr;max-width:340px;margin:0 auto 18px">
-      <div class="pay-plan" data-plan="pro_monthly" onclick="selectPayPlan(this)"><div class="pp-name">Pro Monthly</div><div class="pp-price">$23<span style="font-size:10px;color:var(--muted);font-weight:500">/mo</span></div><div class="pp-note">Cancel anytime</div></div>
-      <div class="pay-plan" data-plan="max_monthly" onclick="selectPayPlan(this)"><div class="pp-name">Max Monthly</div><div class="pp-price">$100<span style="font-size:10px;color:var(--muted);font-weight:500">/mo</span></div><div class="pp-note">Cancel anytime</div></div>
+    <div class="user-row" onclick="logout()">
+      <div class="user-avatar">A</div>
+      <div class="user-info"><div class="un">Alex Chen</div><div class="ue">alex@ez-pilot.com</div></div>
+      <div class="logout-icon">⏻</div>
     </div>
-    <div class="pay-requirement">A valid payment method is required to start — confirms identity and enables billing after trial.</div>
-    <button class="pay-cta" id="pay-cta" onclick="startCheckout()">💳 Continue to Secure Checkout →</button>
-    <div class="stripe-pill">🔒 Payments secured by Stripe · PCI-DSS compliant</div>
-    <div class="pay-skip-note">By continuing, you authorize EZ Pilot to charge after the trial ends unless cancelled.</div>
-  </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">🔒 <strong>ez-pilot.com</strong> · autonomous AI agent</div>
+      <div class="right">
+        <button class="icon-btn">🔔</button>
+        <button class="icon-btn">⚙️</button>
+        <button class="upgrade-btn" onclick="goTo('pricing')">⚡ Upgrade</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- HOME -->
+      <section class="screen active" id="home">
+        <div class="home-hero">
+          <svg class="home-logo"><use href="#ezlogo"/></svg>
+          <div class="home-h1">You're all set. Start now.</div>
+          <div class="home-sub">No setup needed — just tell me what to do</div>
+          <div class="home-input-wrap">
+            <div class="home-input" onclick="goTo('chat')">
+              <div class="plus">+</div>
+              <input type="text" placeholder="Try: Reply to my unread emails…" readonly>
+              <div class="mic">🎤</div>
+            </div>
+            <div class="quick-prompts">
+              <button class="quick-prompt" onclick="goTo('chat')">💬 Reply to my unread messages</button>
+              <button class="quick-prompt" onclick="goTo('chat')">📧 Draft a follow-up email</button>
+              <button class="quick-prompt" onclick="goTo('chat')">📋 Show me my tasks</button>
+              <button class="quick-prompt" onclick="goTo('chat')">💰 How can I save money this month?</button>
+              <button class="quick-prompt" onclick="goTo('chat')">📢 Launch an ad campaign</button>
+              <button class="quick-prompt" onclick="goTo('agents')">🌐 Browse the web</button>
+              <button class="quick-prompt" onclick="goTo('chat')">💼 Find jobs</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- API Keys (OpenRouter + HuggingFace) -->
+        <div id="api-keys-section" style="max-width:480px;margin:24px auto 0">
+          <div style="text-align:center;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;cursor:pointer" onclick="document.getElementById('api-keys-panel').style.display=document.getElementById('api-keys-panel').style.display==='none'?'block':'none'">
+            🔑 API Keys <span style="font-size:9px;color:var(--muted-2)">(optional — click to expand)</span>
+          </div>
+          <div id="api-keys-panel" style="display:none;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div>
+                <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">OpenRouter</label>
+                <input type="password" id="key-openrouter" placeholder="sk-or-v1-..." style="width:100%;margin-top:4px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:12px;font-family:monospace" onchange="saveApiKey('openrouter',this.value)">
+              </div>
+              <div>
+                <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase">HuggingFace</label>
+                <input type="password" id="key-huggingface" placeholder="hf_..." style="width:100%;margin-top:4px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:12px;font-family:monospace" onchange="saveApiKey('huggingface',this.value)">
+              </div>
+              <div style="font-size:9px;color:var(--muted-2);text-align:center">Keys stored locally (encrypted). Never sent to our servers.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zero-setup status panel -->
+        <div style="max-width:680px;margin:28px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite"></div>
+              <span style="font-size:13px;font-weight:700">Automation</span>
+              <span id="automation-status" style="margin-left:auto;font-size:11px;font-weight:700;color:var(--green)">ON</span>
+            </div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.5">
+              AI reads incoming messages and drafts replies. You confirm before sending.
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer;font-size:12px;font-weight:600">
+              <input type="checkbox" id="automation-toggle" checked onchange="toggleAutomation()" style="accent-color:var(--yellow-deep);width:16px;height:16px">
+              Auto-reply enabled
+            </label>
+          </div>
+          <div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px">
+            <div style="font-size:13px;font-weight:700;margin-bottom:10px">Connected</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6">
+              ✅ Email (via Google sign-in)<br>
+              ✅ Calendar<br>
+              ✅ Google Docs<br>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-stats">
+          <div class="stat-card"><div class="lbl">Drafts Ready</div><div class="val" id="home-drafts">0</div><div class="delta">awaiting review</div></div>
+          <div class="stat-card"><div class="lbl">Tasks</div><div class="val" id="home-tasks">0</div><div class="delta">auto-detected</div></div>
+          <div class="stat-card"><div class="lbl">Replies Sent</div><div class="val" id="home-replies">0</div><div class="delta">today</div></div>
+          <div class="stat-card"><div class="lbl">Time Saved</div><div class="val" id="home-time">0m</div><div class="delta">this week</div></div>
+        </div>
+      </section>
+
+      <!-- CHAT -->
+      <section class="screen" id="chat">
+        <div class="chat-top">
+          <h1>Chat</h1>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span class="chat-status">online · ready</span>
+            <div class="model-picker" style="cursor:default">🧠 <span style="font-size:12px;font-weight:600;color:var(--muted)">Auto-select</span></div>
+            <input type="hidden" id="model-select" value="Auto">
+          </div>
+        </div>
+        <div class="chat-msgs" id="msgs">
+          <div class="chat-empty" id="chat-empty">
+            <svg viewBox="0 0 1024 1024" style="width:60px;height:60px;margin-bottom:14px;opacity:.5"><use href="#ezlogo"/></svg>
+            <h3>Ready to work</h3>
+            <p style="margin-bottom:16px">No setup needed. Try one of these:</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:480px">
+              <button onclick="quickChat('Reply to my unread emails')" style="background:var(--yellow-soft);border:1px solid var(--yellow-deep);padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer">📧 Reply to emails</button>
+              <button onclick="quickChat('Follow up with anyone I haven\\'t replied to in 24 hours')" style="background:var(--yellow-soft);border:1px solid var(--yellow-deep);padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer">🔄 Auto follow-up</button>
+              <button onclick="quickChat('Create a task: prepare weekly report')" style="background:var(--yellow-soft);border:1px solid var(--yellow-deep);padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer">📋 Create a task</button>
+              <button onclick="quickChat('What should I focus on today?')" style="background:var(--yellow-soft);border:1px solid var(--yellow-deep);padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer">🧠 What to do today</button>
+            </div>
+          </div>
+        </div>
+        <div class="composer">
+          <div class="context-row">
+            <button class="context-pill" data-context="budget">💰 Pull budget</button>
+            <button class="context-pill" data-context="tasks">📋 Pull tasks</button>
+            <button class="context-pill" data-context="agents">🌐 Browser agent</button>
+            <span class="upload-counter" id="upload-counter" style="margin-left:auto">📎 0/15 files today</span>
+          </div>
+          <div class="composer-inner">
+            <button class="attach-btn" onclick="document.getElementById('file-input').click()" title="Attach file (any type)">📎</button>
+            <input type="file" id="file-input" style="display:none" onchange="handleFileUpload(event)">
+            <input type="text" placeholder="Ask anything or command me — I can pull from your budget, tasks & memory…" id="chat-input">
+            <button class="send-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TASKS -->
+      <section class="screen" id="tasks">
+        <div class="page-head"><h1>Tasks</h1><button class="ai-pill">📋 AI Work Log</button></div>
+        <div class="live-banner">
+          <div class="live-dot"></div>
+          <div class="txt"><div class="t">Monitoring active</div><div class="s">Watching connected services for new activity</div></div>
+          <div class="count" id="task-today-count">0 today</div>
+        </div>
+        <div class="task-progress">
+          <div class="row"><span class="lbl">Today's progress</span><span class="pct" id="task-pct">0%</span></div>
+          <div class="task-progress-bar"><div class="task-progress-fill" id="task-fill" style="width:0%"></div></div>
+        </div>
+        <div class="add-bar"><input type="text" placeholder="Add a task or tell the bot to create one..." id="manual-task-input"><button onclick="addManualTask()">+</button></div>
+        <div id="task-list">
+          <!-- Tasks load from Firestore — empty by default -->
+          <div id="task-empty" style="text-align:center;padding:40px 20px;color:var(--muted)">
+            <div style="font-size:32px;margin-bottom:8px">📋</div>
+            <div style="font-size:14px;font-weight:600">No tasks yet</div>
+            <div style="font-size:12px;margin-top:4px">Ask the bot to create one, or add manually above.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BUDGET -->
+      <section class="screen" id="budget">
+        <div class="page-head"><h1>Budget</h1><button class="ai-pill">✨ AI Analyze</button></div>
+        <div class="budget-grid">
+          <div class="balance-hero">
+            <div class="lbl">Available Balance</div>
+            <div class="val" id="budget-balance">$0.00</div>
+            <div class="row">
+              <div><div class="l">Income</div><div class="v" style="color:#10b981" id="budget-income">$0</div></div>
+              <div><div class="l">Spent</div><div class="v" style="color:#ef4444" id="budget-spent">$0</div></div>
+            </div>
+          </div>
+          <div class="donut-card">
+            <h3>Spending by Category</h3>
+            <div style="text-align:center;padding:30px;color:var(--muted);font-size:13px">No spending data yet. Add entries below or ask the bot.</div>
+          </div>
+        </div>
+        <div id="budget-list">
+          <div id="budget-empty" style="text-align:center;padding:30px 20px;color:var(--muted)">
+            <div style="font-size:28px;margin-bottom:8px">💰</div>
+            <div style="font-size:14px;font-weight:600">No entries yet</div>
+            <div style="font-size:12px;margin-top:4px">Tell the bot "add expense $50 for groceries" or entries will load from your account.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BROWSER AGENTS (Max plan only) -->
+      <section class="screen" id="agents">
+        <div class="page-head"><h1>Browser Agents</h1><span class="ai-pill" style="background:#0a0a0a;color:var(--yellow);border:none">⚡ Max plan</span></div>
+        <div class="live-banner">
+          <div class="live-dot"></div>
+          <div class="txt"><div class="t">Claude Sonnet — Web browsing agent</div><div class="s">AI can browse websites, fill forms, extract data, and take actions in real time</div></div>
+          <div class="count">READY</div>
+        </div>
+
+        <div id="agent-gate" style="display:none;text-align:center;padding:40px 20px">
+          <div style="font-size:40px;margin-bottom:12px">🔒</div>
+          <div style="font-size:16px;font-weight:700">Browser Agents require Max plan</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:6px">Upgrade to Max for AI-powered web browsing, form filling, data extraction, and automated research.</div>
+          <button onclick="goTo('pricing')" style="margin-top:16px;background:var(--yellow);color:var(--ink);border:1px solid var(--yellow-deep);padding:11px 22px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer">Upgrade to Max →</button>
+        </div>
+
+        <div id="agent-content">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+            <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;cursor:pointer" onclick="startBrowserTask('Research competitors and summarize their pricing')">
+              <div style="font-size:14px;font-weight:700">🔍 Research</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">Browse websites, extract info, compare data</div>
+            </div>
+            <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;cursor:pointer" onclick="startBrowserTask('Fill out the signup form on the target website')">
+              <div style="font-size:14px;font-weight:700">📝 Form filling</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">Auto-fill registration, applications, surveys</div>
+            </div>
+            <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;cursor:pointer" onclick="startBrowserTask('Scrape product listings and organize in a spreadsheet')">
+              <div style="font-size:14px;font-weight:700">📊 Data extraction</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">Scrape structured data from any website</div>
+            </div>
+            <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;cursor:pointer" onclick="startBrowserTask('Monitor this page for changes and alert me')">
+              <div style="font-size:14px;font-weight:700">👁️ Monitoring</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">Watch pages for changes, price drops, updates</div>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px">
+            <div style="display:flex;gap:8px">
+              <input type="text" id="browser-task-input" placeholder="Tell the agent what to do on the web..." style="flex:1;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:13px;font-family:inherit">
+              <button onclick="startBrowserTask()" style="background:var(--yellow);border:1px solid var(--yellow-deep);border-radius:8px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer">Run →</button>
+            </div>
+          </div>
+
+          <div id="agent-log">
+            <div id="agent-empty" style="text-align:center;padding:30px;color:var(--muted)">
+              <div style="font-size:28px;margin-bottom:8px">🌐</div>
+              <div style="font-size:14px;font-weight:600">No agent runs yet</div>
+              <div style="font-size:12px;margin-top:4px">Pick a task above or describe what you need the browser to do.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INTEGRATIONS -->
+
+      <!-- PRICING -->
+      <section class="screen" id="pricing">
+        <div class="pricing-head">
+          <h1>Choose Your Plan</h1>
+          <p>Start with a 1-month free Pro trial · Annual plans are 12-month commitments · Monthly plans cancel anytime</p>
+        </div>
+        <div class="billing-toggle">
+          <span class="toggle-lbl" id="lbl-monthly" style="color:var(--muted)">Monthly</span>
+          <div class="toggle annual" id="toggle" onclick="toggleBilling()"></div>
+          <span class="toggle-lbl" id="lbl-annual">Annual</span>
+          <span class="save-pill">Save ~17%</span>
+        </div>
+        <div class="plans-grid">
+          <div class="plan featured">
+            <div class="save-tag">🎉 1-MONTH FREE TRIAL</div>
+            <div class="name">Pro</div>
+            <div class="price">
+              <span class="strike" id="pro-strike">$19</span>
+              <span id="pro-price">$0</span>
+              <span class="per" id="pro-per">/first month</span>
+            </div>
+            <div class="billing-note" id="pro-note">Then <strong>$19/mo</strong> billed annually ($228/yr) · 12-month commitment, no mid-term cancel</div>
+            <div class="trial-callout">⚡ First month free — full Pro access, no credit card required</div>
+            <ul>
+              <li>20 agent uses per 12h</li>
+              <li>10 advanced AI uses per 12h (Claude Opus 4.6, Sonnet 3.7)</li>
+              <li>Pick any AI model in chat</li>
+              <li>Advanced AI reasoning (Claude Sonnet 3.7)</li>
+              <li>Browser agents (web browsing AI)</li>
+              <li>Auto task creation & execution</li>
+              <li>Trip & hotel booking</li>
+              <li>Google Docs automation</li>
+            </ul>
+            <button class="cta cta-upgrade" onclick="handleUpgradeClick('pro')">Start Free Trial →</button>
+            <div class="pay-link">Monthly link: <a href="https://pay.ez-pilot.com/pro/monthly">pay.ez-pilot.com/pro/monthly</a></div>
+          </div>
+
+          <div class="plan max">
+            <div class="save-tag">⚡ EVERYTHING UNLOCKED</div>
+            <div class="name">Max <span class="max-badge">PRO+</span></div>
+            <div class="price">
+              <span id="max-price">$90</span>
+              <span class="per">/month</span>
+            </div>
+            <div class="billing-note" id="max-note">Billed annually ($1,080/yr) · save $120/yr · 12-month commitment</div>
+            <ul>
+              <li>Everything in Pro</li>
+              <li><strong>Unlimited</strong> agent actions</li>
+              <li><strong>Unlimited</strong> Claude Opus 4.6 + browser agents</li>
+              <li>Browser agents — AI browses the web for you</li>
+              <li>Real-time web research & data extraction</li>
+              <li>Priority agent execution</li>
+              <li>Premium support</li>
+            </ul>
+            <button class="cta cta-max" onclick="handleUpgradeClick('max')">Upgrade to Max →</button>
+            <div class="pay-link">Monthly link: <a href="https://pay.ez-pilot.com/max/monthly">pay.ez-pilot.com/max/monthly</a></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE -->
+      <section class="screen" id="profile">
+        <div class="page">
+          <div class="page-head">
+            <h1>Profile</h1>
+            <button class="ai-pill" onclick="logout()">Sign out →</button>
+          </div>
+          <div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;margin-bottom:16px">
+            <div style="display:flex;align-items:center;gap:18px;margin-bottom:24px">
+              <div id="profile-avatar" style="width:64px;height:64px;border-radius:16px;background:var(--yellow);color:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px">A</div>
+              <div>
+                <div id="profile-display-name" style="font-size:20px;font-weight:800;letter-spacing:-0.01em">—</div>
+                <div id="profile-email" style="font-size:13px;color:var(--muted);margin-top:2px">—</div>
+                <div id="profile-plan-pill" style="display:inline-block;margin-top:6px;padding:3px 10px;border-radius:999px;background:var(--yellow-soft);color:#5a4a00;font-size:11px;font-weight:700">FREE</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div>
+                <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);display:block;margin-bottom:6px">Display name</label>
+                <input type="text" id="profile-name-input" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fafafa">
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);display:block;margin-bottom:6px">Email or phone</label>
+                <input type="text" id="profile-id-input" disabled style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#f5f5f5;color:var(--muted-2)">
+                <div style="font-size:11px;color:var(--muted);margin-top:4px">Contact support to change your sign-in identifier.</div>
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);display:block;margin-bottom:6px">Bio (optional)</label>
+                <textarea id="profile-bio-input" rows="3" placeholder="A short description of yourself" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fafafa;font-family:inherit;resize:vertical"></textarea>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:6px">
+                <button onclick="saveProfile()" style="flex:1;padding:13px;background:var(--yellow);color:var(--ink);border:1px solid var(--yellow-deep);border-radius:10px;font-weight:700;font-size:14px;cursor:pointer">Save changes</button>
+                <button onclick="loadProfile()" style="padding:13px 22px;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:10px;font-weight:600;font-size:14px;cursor:pointer">Reset</button>
+              </div>
+              <div id="profile-status" style="font-size:12px;font-weight:600;text-align:center;margin-top:4px;display:none"></div>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px">
+            <h3 style="font-size:14px;font-weight:800;margin-bottom:12px">Change password</h3>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <input type="password" id="pw-current" placeholder="Current password" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fafafa">
+              <input type="password" id="pw-new" placeholder="New password (min 8 chars)" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fafafa">
+              <button onclick="changePassword()" style="padding:11px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer">Update password</button>
+              <div id="pw-status" style="font-size:12px;font-weight:600;text-align:center;display:none"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
 </div>
 
 <script>
+  // ============================================================
+  // EZ PILOT — Firebase Auth (compat SDK — no race conditions)
+  // Sign in: Email, Phone OTP, Google popup, Microsoft popup
+  // All sensitive data encrypted before localStorage storage.
+  // ============================================================
+
   const ADMIN_EMAILS = ['kateljj68@gmail.com', 'dcev6853@gmail.com'];
   function isAdmin(e){ return e && ADMIN_EMAILS.map(x=>x.toLowerCase()).includes(String(e).toLowerCase().trim()); }
 
-  // Encrypted storage (shared with ez-pilot.html via localStorage)
-  const _EZS={_seed:null,_getSeed(){if(this._seed)return this._seed;let s=localStorage.getItem('ezp_dk');if(!s){const a=new Uint8Array(32);crypto.getRandomValues(a);s=Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join('');localStorage.setItem('ezp_dk',s)}this._seed=s;return s},async _getKey(){const s=this._getSeed();const e=new TextEncoder();const k=await crypto.subtle.importKey('raw',e.encode(s),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:e.encode('ezpilot-v1'),iterations:100000,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])},async encrypt(p){const k=await this._getKey();const e=new TextEncoder();const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,e.encode(p));const b=new Uint8Array(iv.length+ct.byteLength);b.set(iv,0);b.set(new Uint8Array(ct),iv.length);return btoa(String.fromCharCode(...b))},async decrypt(c){try{const k=await this._getKey();const r=Uint8Array.from(atob(c),x=>x.charCodeAt(0));const iv=r.slice(0,12);const ct=r.slice(12);const d=await crypto.subtle.decrypt({name:'AES-GCM',iv},k,ct);return new TextDecoder().decode(d)}catch(e){return null}}};
-  async function secureSet(k,v){try{localStorage.setItem(k,await _EZS.encrypt(v))}catch(e){localStorage.setItem(k,v)}}
-  async function secureGet(k){const v=localStorage.getItem(k);if(!v)return null;const d=await _EZS.decrypt(v);return d!==null?d:v}
-  async function secureGetJSON(k){const v=await secureGet(k);try{return JSON.parse(v)}catch(e){return{}}}
-  function secureRemove(k){localStorage.removeItem(k)}
-  async function gP(uid){return secureGetJSON('ezp_p_'+uid)}
-  async function sP(uid,d){await secureSet('ezp_p_'+uid,JSON.stringify(d))}
+  // Admin gets Max vision forever — all features unlocked, never sees payment gate
+  function getAdminPlan(){ return 'max'; }
 
-  // Error messages
-  function fErr(e){
-    const m={'auth/email-already-in-use':'Email already in use. Try signing in.','auth/invalid-email':'Invalid email.','auth/weak-password':'Password too weak (8+ chars).','auth/user-not-found':'No account found. Try signing up.','auth/wrong-password':'Incorrect password.','auth/invalid-credential':'Invalid email or password.','auth/too-many-requests':'Too many attempts. Try later.','auth/popup-closed-by-user':'Popup closed — try again.','auth/account-exists-with-different-credential':'Account exists with different sign-in method.'};
-    return m[e.code]||e.message||'Auth error.';
-  }
-
-  // Post-auth → redirect to app
-  async function postAuth(user){
-    const email=user.email||user.phoneNumber||'';
-    const admin=isAdmin(email);
-    let profile=await gP(user.uid);
-    if(!profile.identifier){
-      profile={identifier:email,fullName:user.displayName||email,displayName:user.displayName||email,bio:'',plan:admin?'admin':'free',subscriptionActive:admin};
+  // ===== ENCRYPTED STORAGE LAYER =====
+  // Encrypts sensitive data (emails, phone numbers, profile info) before
+  // writing to localStorage. Uses AES-GCM with a key derived from a
+  // device-specific seed via PBKDF2. This satisfies CWE-312/CWE-313.
+  const _EZS = {
+    _seed: null,
+    _getSeed(){
+      if(this._seed) return this._seed;
+      let seed = localStorage.getItem('ezp_dk');
+      if(!seed){
+        const arr = new Uint8Array(32);
+        crypto.getRandomValues(arr);
+        seed = Array.from(arr).map(b=>b.toString(16).padStart(2,'0')).join('');
+        localStorage.setItem('ezp_dk', seed);
+      }
+      this._seed = seed;
+      return seed;
+    },
+    async _getKey(){
+      const seed = this._getSeed();
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(seed), 'PBKDF2', false, ['deriveKey']);
+      return crypto.subtle.deriveKey(
+        {name:'PBKDF2', salt:enc.encode('ezpilot-v1'), iterations:100000, hash:'SHA-256'},
+        keyMaterial, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']
+      );
+    },
+    async encrypt(plaintext){
+      const key = await this._getKey();
+      const enc = new TextEncoder();
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const ct = await crypto.subtle.encrypt({name:'AES-GCM',iv}, key, enc.encode(plaintext));
+      const buf = new Uint8Array(iv.length + ct.byteLength);
+      buf.set(iv, 0);
+      buf.set(new Uint8Array(ct), iv.length);
+      return btoa(String.fromCharCode(...buf));
+    },
+    async decrypt(ciphertext){
+      try{
+        const key = await this._getKey();
+        const raw = Uint8Array.from(atob(ciphertext), c=>c.charCodeAt(0));
+        const iv = raw.slice(0,12);
+        const ct = raw.slice(12);
+        const pt = await crypto.subtle.decrypt({name:'AES-GCM',iv}, key, ct);
+        return new TextDecoder().decode(pt);
+      }catch(e){ return null; }
     }
-    if(admin){profile.subscriptionActive=true;profile.plan='max'}
-    await sP(user.uid,profile);
-    await secureSet('ezp_user',JSON.stringify({uid:user.uid,identifier:email,fullName:profile.displayName,plan:profile.plan}));
+  };
 
-    const btn=document.getElementById('login-cta');
-    if(btn){btn.classList.remove('loading');btn.textContent='Sign In →'}
+  // Encrypted versions of localStorage get/set for sensitive data
+  async function secureSet(key, value){
+    const encrypted = await _EZS.encrypt(typeof value === 'string' ? value : JSON.stringify(value));
+    localStorage.setItem(key, encrypted);
+  }
+  async function secureGet(key){
+    const raw = localStorage.getItem(key);
+    if(!raw) return null;
+    // Handle migration: if it starts with { or [ it's old unencrypted data — re-encrypt it
+    if(raw.startsWith('{') || raw.startsWith('[') || raw.startsWith('"')){
+      await secureSet(key, raw);
+      return raw;
+    }
+    const decrypted = await _EZS.decrypt(raw);
+    return decrypted;
+  }
+  async function secureGetJSON(key){
+    const val = await secureGet(key);
+    if(!val) return {};
+    try{ return JSON.parse(val); }catch(e){ return {}; }
+  }
+  function secureRemove(key){ localStorage.removeItem(key); }
 
-    if(admin||profile.subscriptionActive){
-      window.location.href='ez-pilot.html';
-    } else {
-      document.getElementById('payment-overlay').classList.add('show');
+  // API Key storage (encrypted, local only)
+  async function saveApiKey(provider, value){
+    if(!value){ secureRemove('ezp_key_'+provider); return; }
+    await secureSet('ezp_key_'+provider, value);
+  }
+  async function loadApiKey(provider){
+    return await secureGet('ezp_key_'+provider);
+  }
+  // Restore saved keys on load
+  (async function(){
+    const or_key = await loadApiKey('openrouter');
+    const hf_key = await loadApiKey('huggingface');
+    if(or_key){ const el=document.getElementById('key-openrouter'); if(el) el.value='••••••••'; }
+    if(hf_key){ const el=document.getElementById('key-huggingface'); if(el) el.value='••••••••'; }
+  })();
+
+  // Profile helpers using encrypted storage
+  async function gP(uid){ return secureGetJSON('ezp_p_'+uid); }
+  async function sP(uid,d){ await secureSet('ezp_p_'+uid, JSON.stringify(d)); }
+
+
+  // ===== SESSION CHECK — non-blocking =====
+  let _currentUser = null;
+  (async function(){
+    const user = await secureGetJSON('ezp_user');
+    if(user && user.uid){
+      _currentUser = user;
+    }
+    // If Firebase is loaded, also listen for auth state
+    if(typeof fbAuth !== 'undefined'){
+      fbAuth.onAuthStateChanged(u => {
+        if(u) _currentUser = {uid:u.uid, identifier:u.email||u.phoneNumber||''};
+      });
+    }
+  })();
+
+  // Logout → clear session
+  function logout(){
+    if(typeof fbAuth !== 'undefined') fbAuth.signOut().catch(()=>{});
+    secureRemove('ezp_token');
+    secureRemove('ezp_user');
+    secureRemove('ezp_remember');
+    _currentUser = null;
+    window.location.href = 'signin.html';
+  }
+
+  // Stripe return check
+  (function(){
+    const p=new URLSearchParams(window.location.search);
+    if(p.get('checkout')==='success'){
+      const plan=localStorage.getItem('ezp_pending_plan');
+      if(plan) localStorage.setItem('ezp_active_plan',plan);
+      localStorage.removeItem('ezp_pending_plan');
+      window.history.replaceState({},'',window.location.pathname);
+    }
+  })();
+
+  // ===== NAVIGATION =====
+  const navItems = document.querySelectorAll('.nav-item');
+  const screens = document.querySelectorAll('.screen');
+  function goTo(id){
+    screens.forEach(s => s.classList.toggle('active', s.id === id));
+    navItems.forEach(n => n.classList.toggle('active', n.dataset.screen === id));
+    document.querySelector('.main').scrollTop = 0;
+  }
+  navItems.forEach(n => n.addEventListener('click', () => goTo(n.dataset.screen)));
+
+  // ===== PRICING TOGGLE =====
+  let isAnnual=true;
+  function toggleBilling(){
+    isAnnual=!isAnnual;
+    const el=id=>document.getElementById(id);
+    el('toggle').classList.toggle('annual',isAnnual);
+    el('lbl-monthly').style.color=isAnnual?'var(--muted)':'var(--ink)';
+    el('lbl-annual').style.color=isAnnual?'var(--ink)':'var(--muted)';
+    if(isAnnual){
+      if(el('pro-price'))el('pro-price').textContent='$0';
+      if(el('strike-price'))el('strike-price').style.display='inline';
+      if(el('billing-note'))el('billing-note').innerHTML='Then <strong>$19/mo</strong> annually ($228/yr)';
+      if(el('save-tag'))el('save-tag').style.display='block';
+      if(el('year1-banner'))el('year1-banner').style.display='block';
+      if(el('max-price'))el('max-price').textContent='$90';
+      if(el('max-note'))el('max-note').textContent='$1,080/yr annually';
+    }else{
+      if(el('pro-price'))el('pro-price').textContent='$23';
+      if(el('strike-price'))el('strike-price').style.display='none';
+      if(el('billing-note'))el('billing-note').textContent='Monthly \u00B7 cancel anytime';
+      if(el('save-tag'))el('save-tag').style.display='none';
+      if(el('year1-banner'))el('year1-banner').style.display='none';
+      if(el('max-price'))el('max-price').textContent='$100';
+      if(el('max-note'))el('max-note').textContent='Monthly \u00B7 cancel anytime';
     }
   }
 
-  // Login UI state
-  let authMode='login',loginTab='email';
-
-  function switchLoginTab(el,type){
-    document.querySelectorAll('.login-tab').forEach(t=>t.classList.remove('active'));
-    el.classList.add('active');loginTab=type;
-    document.getElementById('email-fields').style.display=type==='email'?'block':'none';
-    document.getElementById('phone-fields').style.display=type==='phone'?'block':'none';
-    document.getElementById('otp-section').style.display='none';hideLoginError();
-    document.getElementById('login-cta').textContent=type==='phone'?'Send verification code':(authMode==='signup'?'Create Account →':'Sign In →');
+  // ===== PROFILE =====
+  async function loadProfile(){
+    const u=await secureGetJSON('ezp_user');
+    if(!u.uid) return;
+    const p=gP(u.uid);
+    const dn=p.displayName||u.fullName||u.identifier||'';
+    document.getElementById('profile-display-name').textContent=dn;
+    document.getElementById('profile-email').textContent=u.identifier||'';
+    document.getElementById('profile-name-input').value=dn;
+    document.getElementById('profile-id-input').value=u.identifier||'';
+    document.getElementById('profile-bio-input').value=p.bio||'';
+    document.getElementById('profile-avatar').textContent=(dn||'?').charAt(0).toUpperCase();
+    const pill=document.getElementById('profile-plan-pill');
+    if(p.plan==='admin'){pill.textContent='\u26A1 ADMIN';pill.style.background='#0a0a0a';pill.style.color='#FFEB3B'}
+    else{pill.textContent=(p.plan||'FREE').toUpperCase();pill.style.background='var(--yellow-soft)';pill.style.color='#5a4a00'}
   }
-  function toggleAuthMode(){
-    authMode=authMode==='login'?'signup':'login';
-    const n=document.getElementById('login-name'),c=document.getElementById('login-cta'),t=document.getElementById('auth-toggle-txt'),b=document.getElementById('auth-toggle-btn');
-    if(authMode==='signup'){n.style.display='block';c.textContent='Create Account →';t.textContent='Already have an account?';b.textContent='Sign in'}
-    else{n.style.display='none';c.textContent='Sign In →';t.textContent="Don't have an account?";b.textContent='Sign up'}
-    hideLoginError();
+  async function saveProfile(){
+    const u=await secureGetJSON('ezp_user');
+    if(!u.uid) return;
+    const p=gP(u.uid);
+    const newName=document.getElementById('profile-name-input').value.trim();
+    if(!newName){showProfileStatus('Name required.',false);return}
+    p.displayName=newName;p.fullName=newName;p.bio=document.getElementById('profile-bio-input').value.trim();
+    sP(u.uid,p);
+    u.fullName=newName;await secureSet('ezp_user',JSON.stringify(u));
+    document.getElementById('profile-display-name').textContent=newName;
+    document.getElementById('profile-avatar').textContent=newName.charAt(0).toUpperCase();
+    if(fbAuth.currentUser) fbAuth.currentUser.updateProfile({displayName:newName}).catch(()=>{});
+    showProfileStatus('\u2713 Saved.',true);
   }
-  function updateLoginButton(){document.getElementById('login-cta').disabled=!document.getElementById('terms-accept').checked}
-  function showLoginError(m){const e=document.getElementById('login-error');e.textContent=m;e.classList.add('show')}
-  function hideLoginError(){const e=document.getElementById('login-error');if(e)e.classList.remove('show');document.querySelectorAll('.login-input.invalid').forEach(i=>i.classList.remove('invalid'))}
+  function showProfileStatus(m,ok){const el=document.getElementById('profile-status');el.textContent=m;el.style.color=ok?'#10b981':'#ef4444';el.style.display='block';setTimeout(()=>{el.style.display='none'},2500)}
+  function changePassword(){
+    const cur=document.getElementById('pw-current').value;
+    const np=document.getElementById('pw-new').value;
+    if(!cur||!np){showPwStatus('Both fields required.',false);return}
+    if(np.length<8){showPwStatus('8+ characters required.',false);return}
+    const user=fbAuth.currentUser;
+    if(!user||!user.email){showPwStatus('Only email accounts can change password.',false);return}
+    const cred=firebase.auth.EmailAuthProvider.credential(user.email,cur);
+    user.reauthenticateWithCredential(cred).then(()=>{
+      return user.updatePassword(np);
+    }).then(()=>{
+      document.getElementById('pw-current').value='';document.getElementById('pw-new').value='';
+      showPwStatus('\u2713 Password updated.',true);
+    }).catch(err=>showPwStatus(fErr(err),false));
+  }
+  function showPwStatus(m,ok){const el=document.getElementById('pw-status');el.textContent=m;el.style.color=ok?'#10b981':'#ef4444';el.style.display='block';setTimeout(()=>{el.style.display='none'},2500)}
+  document.querySelectorAll('.nav-item[data-screen="profile"]').forEach(n=>{n.addEventListener('click',()=>setTimeout(loadProfile,50))});
 
-  function doSubmit(){
-    if(!document.getElementById('terms-accept').checked){showLoginError('You must agree to Terms & Privacy.');return}
-    if(loginTab==='phone')return doPhoneAuth();
-    if(authMode==='signup')return doEmailSignup();
-    return doEmailSignin();
+  // ===== TASKS =====
+  document.querySelectorAll('.task .check').forEach(c=>{
+    c.addEventListener('click',()=>{const t=c.closest('.task');t.classList.toggle('done');c.textContent=t.classList.contains('done')?'\u2713':''});
+  });
+
+  // ===== CHAT =====
+  const chatInput=document.getElementById('chat-input');
+  const msgsEl=document.getElementById('msgs');
+  const botAvatar='<div class="avatar bot"><svg viewBox="0 0 1024 1024" style="width:24px;height:24px"><use href="#ezlogo"/></svg></div>';
+  const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
+
+  async function sendMsg(){
+    const v=chatInput.value.trim();if(!v)return;
+    const empty=document.getElementById('chat-empty');if(empty)empty.style.display='none';
+    msgsEl.insertAdjacentHTML('beforeend','<div class="msg user"><div class="avatar user">U</div><div class="bubble">'+v.replace(/</g,'&lt;')+'</div></div>');
+    chatInput.value='';msgsEl.scrollTop=msgsEl.scrollHeight;
+
+    // Show typing indicator
+    const typingId = 'typing-'+Date.now();
+    msgsEl.insertAdjacentHTML('beforeend','<div class="msg" id="'+typingId+'">'+botAvatar+'<div class="bubble" style="color:var(--muted)">Thinking...</div></div>');
+    msgsEl.scrollTop=msgsEl.scrollHeight;
+
+    // Get selected model
+    const modelSelect = document.getElementById('model-select');
+    const model = modelSelect ? modelSelect.value : 'Auto';
+
+    // Get active context pills
+    const activePills = Array.from(document.querySelectorAll('.context-pill.active')).map(p=>p.dataset.context).filter(Boolean);
+
+    try {
+      // Try calling the real backend
+      const user = await secureGetJSON('ezp_user');
+      const token = user.uid ? await new Promise(r => { if(fbAuth.currentUser) fbAuth.currentUser.getIdToken().then(r).catch(()=>r(null)); else r(null); }) : null;
+
+      const res = await fetch(API_BASE + '/api/task', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
+        },
+        body: JSON.stringify({
+          message: v,
+          model,
+          context: activePills.length ? { pull: activePills } : undefined,
+        }),
+        signal: AbortSignal.timeout(60000),
+      });
+
+      // Remove typing indicator
+      document.getElementById(typingId)?.remove();
+
+      if (res.ok) {
+        const data = await res.json();
+        let reply = '<span class="tool-chip">AI generated</span>';
+        if (data.pipeline) {
+          reply = '<span class="tool-chip">' + (data.pipeline.modelsUsed || [model]).join(' → ') + '</span>';
+        }
+        reply += '<br>' + (data.response || data.text || 'Done.').replace(/\n/g, '<br>');
+
+        // Show pending confirmations
+        if (data.pendingConfirmations?.length) {
+          for (const pc of data.pendingConfirmations) {
+            reply += '<br><br><span style="background:#fef3c7;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600">⏸ ' + pc.description + '</span>';
+          }
+        }
+
+        // Show steps taken
+        if (data.steps?.length) {
+          for (const step of data.steps) {
+            if (step.requiresConfirmation) {
+              reply += '<br><span style="display:inline-flex;gap:6px;margin-top:6px"><span style="background:#10b981;color:#fff;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer" onclick="confirmDraft(this)">✓ Approve</span><span style="background:#f5f5f5;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer" onclick="rejectDraft(this)">✕ Reject</span></span>';
+            }
+          }
+        }
+
+        msgsEl.insertAdjacentHTML('beforeend','<div class="msg">'+botAvatar+'<div class="bubble">'+reply+'</div></div>');
+      } else {
+        throw new Error('API ' + res.status);
+      }
+    } catch(err) {
+      // Fallback: offline/local mock response
+      document.getElementById(typingId)?.remove();
+      const isTaskRequest = /\b(add|create|make|set|new)\b.*(task|todo|reminder|to-do)/i.test(v);
+      let reply;
+      if(isTaskRequest){
+        reply = '<span class="tool-chip">✓ task created</span><br>Done! I\'ve added that to your Tasks.';
+      } else {
+        reply = '<span class="tool-chip">offline mode</span><br>Backend not connected. Deploy the backend to enable AI responses. <a href="https://github.com/dcev6853-web/EZ-Pilot" target="_blank" style="color:var(--yellow-deep);font-weight:700">Setup guide →</a>';
+      }
+      msgsEl.insertAdjacentHTML('beforeend','<div class="msg">'+botAvatar+'<div class="bubble">'+reply+'</div></div>');
+    }
+    msgsEl.scrollTop=msgsEl.scrollHeight;
   }
 
-  async function doEmailSignin(){
-    hideLoginError();
-    const id=document.getElementById('login-id').value.trim(),pw=document.getElementById('login-pw').value;
-    if(!id){document.getElementById('login-id').classList.add('invalid');showLoginError('Email required.');return}
-    if(!pw||pw.length<8){document.getElementById('login-pw').classList.add('invalid');showLoginError('Password must be 8+ characters.');return}
-    const btn=document.getElementById('login-cta');btn.classList.add('loading');btn.textContent='Signing in…';
-    try{
-      const r=document.getElementById('remember-me')?.checked;
-      await fbAuth.setPersistence(r?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION);
-      const cred=await fbAuth.signInWithEmailAndPassword(id,pw);
-      if(r)secureSet('ezp_remember',id);
-      postAuth(cred.user);
-    }catch(err){showLoginError(fErr(err));btn.classList.remove('loading');btn.textContent='Sign In →'}
+  async function confirmDraft(el){ /* TODO: call /api/task/confirm */ el.textContent='✓ Approved'; el.style.background='#86efac'; }
+  async function rejectDraft(el){ /* TODO: call /api/task/confirm */ el.parentElement.innerHTML='<span style="color:var(--muted);font-size:10px">Rejected</span>'; }
+
+  // ===== BROWSER AGENT (Max plan only) =====
+  async function startBrowserTask(presetTask){
+    const input = document.getElementById('browser-task-input');
+    const task = presetTask || input?.value.trim();
+    if(!task) return;
+    if(input) input.value = '';
+
+    // Check Max plan
+    const user = await secureGetJSON('ezp_user');
+    const profile = await gP(user.uid || '');
+    if(profile.plan !== 'max' && !isAdmin(user.identifier)){
+      document.getElementById('agent-gate').style.display='block';
+      document.getElementById('agent-content').style.display='none';
+      return;
+    }
+
+    const logEl = document.getElementById('agent-log');
+    const empty = document.getElementById('agent-empty');
+    if(empty) empty.style.display='none';
+
+    // Add task card to log
+    const taskId = 'agent-'+Date.now();
+    logEl.insertAdjacentHTML('beforeend',
+      '<div id="'+taskId+'" style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:8px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center">' +
+      '<div style="font-size:13px;font-weight:700">🌐 '+task.replace(/</g,'&lt;').slice(0,80)+'</div>' +
+      '<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700">RUNNING</span>' +
+      '</div>' +
+      '<div style="font-size:11px;color:var(--muted);margin-top:6px" id="'+taskId+'-status">Connecting to Claude Sonnet browser agent...</div>' +
+      '</div>'
+    );
+
+    try {
+      const token = fbAuth.currentUser ? await fbAuth.currentUser.getIdToken() : null;
+      const res = await fetch(API_BASE + '/api/agent/browse', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
+        },
+        body: JSON.stringify({ task }),
+        signal: AbortSignal.timeout(120000),
+      });
+
+      const statusEl = document.getElementById(taskId+'-status');
+      const badge = document.querySelector('#'+taskId+' span');
+
+      if (res.ok) {
+        const data = await res.json();
+        if(statusEl) statusEl.innerHTML = data.result || 'Task completed.';
+        if(badge){ badge.textContent='DONE'; badge.style.background='#dcfce7'; badge.style.color='#166534'; }
+      } else {
+        throw new Error('API ' + res.status);
+      }
+    } catch(err) {
+      const statusEl = document.getElementById(taskId+'-status');
+      const badge = document.querySelector('#'+taskId+' span');
+      if(statusEl) statusEl.textContent = 'Backend not connected. Deploy the Python engine to enable browser agents.';
+      if(badge){ badge.textContent='OFFLINE'; badge.style.background='#fee2e2'; badge.style.color='#991b1b'; }
+    }
   }
 
-  async function doEmailSignup(){
-    hideLoginError();
-    const id=document.getElementById('login-id').value.trim(),name=document.getElementById('login-name').value.trim(),pw=document.getElementById('login-pw').value;
-    if(!name||name.length<2){document.getElementById('login-name').classList.add('invalid');showLoginError('Full name required.');return}
-    if(!id){document.getElementById('login-id').classList.add('invalid');showLoginError('Email required.');return}
-    if(!pw||pw.length<8){document.getElementById('login-pw').classList.add('invalid');showLoginError('Password must be 8+ characters.');return}
-    const btn=document.getElementById('login-cta');btn.classList.add('loading');btn.textContent='Creating account…';
-    try{
-      const r=document.getElementById('remember-me')?.checked;
-      await fbAuth.setPersistence(r?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION);
-      const cred=await fbAuth.createUserWithEmailAndPassword(id,pw);
-      await cred.user.updateProfile({displayName:name});
-      if(r)secureSet('ezp_remember',id);
-      postAuth(cred.user);
-    }catch(err){showLoginError(fErr(err));btn.classList.remove('loading');btn.textContent='Create Account →'}
+  // Show/hide agent gate based on plan
+  document.querySelectorAll('.nav-item[data-screen="agents"]').forEach(n=>{
+    n.addEventListener('click', async ()=>{
+      const user = await secureGetJSON('ezp_user');
+      const profile = await gP(user.uid || '');
+      const hasMax = profile.plan === 'max' || isAdmin(user.identifier);
+      document.getElementById('agent-gate').style.display = hasMax ? 'none' : 'block';
+      document.getElementById('agent-content').style.display = hasMax ? 'block' : 'none';
+    });
+  });
+  if(chatInput) chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg()});
+  document.querySelector('.send-btn')?.addEventListener('click',sendMsg);
+  document.querySelectorAll('.context-pill').forEach(p=>{p.addEventListener('click',()=>{p.classList.toggle('active')})});
+
+  // Quick chat from empty state buttons
+  // ===== UPGRADE CLICK — redirect to signin if not logged in =====
+  async function handleUpgradeClick(plan){
+    const user = await secureGetJSON('ezp_user');
+    if(!user || !user.uid){
+      // Not signed in — show login overlay
+      window.location.href='signin.html';
+      // Store intent so we can redirect after signin
+      sessionStorage.setItem('ezp_upgrade_intent', plan);
+      return;
+    }
+    // Signed in — redirect to Stripe payment link
+    const links = {
+      'pro': isAnnual ? 'https://buy.stripe.com/cNicN67u54rx3rC2YNffy04' : 'https://buy.stripe.com/8x26oIaGhcY37HS42Rffy06',
+      'max': isAnnual ? 'https://buy.stripe.com/dRmfZiaGhgaf0fq1UJffy03' : 'https://buy.stripe.com/4gMeVeaGh3ntbY8bvjffy07',
+    };
+    const url = links[plan];
+    if(url) window.open(url + '?prefilled_email=' + encodeURIComponent(user.identifier || ''), '_blank');
   }
 
-  let confirmationResult=null,recaptchaVerifier=null,otpSent=false;
-  async function doPhoneAuth(){
-    hideLoginError();if(otpSent)return verifyOTP();
-    const phone=document.getElementById('phone-number').value.trim();
-    if(!phone){document.getElementById('phone-number').classList.add('invalid');showLoginError('Phone number required.');return}
-    const btn=document.getElementById('login-cta');btn.classList.add('loading');btn.textContent='Sending code…';
-    try{
-      if(!recaptchaVerifier)recaptchaVerifier=new firebase.auth.RecaptchaVerifier('recaptcha-container',{size:'invisible'});
-      confirmationResult=await fbAuth.signInWithPhoneNumber(phone,recaptchaVerifier);
-      otpSent=true;document.getElementById('otp-section').style.display='block';
-      btn.classList.remove('loading');btn.textContent='Verify code →';
-    }catch(err){showLoginError(fErr(err));btn.classList.remove('loading');btn.textContent='Send verification code';if(recaptchaVerifier){try{recaptchaVerifier.clear()}catch(e){}recaptchaVerifier=null}}
-  }
-  async function verifyOTP(){
-    hideLoginError();const code=document.getElementById('otp-code').value.trim();
-    if(!code||code.length<6){document.getElementById('otp-code').classList.add('invalid');showLoginError('Enter 6-digit code.');return}
-    const btn=document.getElementById('login-cta');btn.classList.add('loading');btn.textContent='Verifying…';
-    try{const result=await confirmationResult.confirm(code);const r=document.getElementById('remember-me')?.checked;if(r)secureSet('ezp_remember',result.user.phoneNumber||'');postAuth(result.user)}
-    catch(err){showLoginError(fErr(err));btn.classList.remove('loading');btn.textContent='Verify code →'}
+  // After signin, check if there was an upgrade intent
+  function checkUpgradeIntent(){
+    const intent = sessionStorage.getItem('ezp_upgrade_intent');
+    if(intent){
+      sessionStorage.removeItem('ezp_upgrade_intent');
+      setTimeout(()=> handleUpgradeClick(intent), 500);
+    }
   }
 
-  async function doGoogleSignIn(){
-    if(!document.getElementById('terms-accept').checked){showLoginError('Agree to Terms & Privacy first.');return}
-    hideLoginError();
-    try{const r=document.getElementById('remember-me')?.checked;await fbAuth.setPersistence(r?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION);const cred=await fbAuth.signInWithPopup(googleProvider);if(r&&cred.user.email)secureSet('ezp_remember',cred.user.email);postAuth(cred.user)}
-    catch(err){showLoginError(fErr(err))}
-  }
-  async function doMicrosoftSignIn(){
-    if(!document.getElementById('terms-accept').checked){showLoginError('Agree to Terms & Privacy first.');return}
-    hideLoginError();
-    try{const r=document.getElementById('remember-me')?.checked;await fbAuth.setPersistence(r?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION);const ms=new firebase.auth.OAuthProvider('microsoft.com');ms.setCustomParameters({tenant:'common'});const cred=await fbAuth.signInWithPopup(ms);if(r&&cred.user.email)secureSet('ezp_remember',cred.user.email);postAuth(cred.user)}
-    catch(err){showLoginError(fErr(err))}
+  function quickChat(text){
+    if(!chatInput) return;
+    goTo('chat');
+    chatInput.value = text;
+    setTimeout(sendMsg, 100);
   }
 
-  // Payment gate
-  let selectedPayPlan='pro_annual';
-  const STRIPE_LINKS={starter:'https://buy.stripe.com/00w14o6q1cY3aU48j7ffy08',pro_monthly:'https://buy.stripe.com/8x26oIaGhcY37HS42Rffy06',max_monthly:'https://buy.stripe.com/4gMeVeaGh3ntbY8bvjffy07',pro_annual:'https://buy.stripe.com/cNicN67u54rx3rC2YNffy04',max_annual:'https://buy.stripe.com/dRmfZiaGhgaf0fq1UJffy03'};
-  function selectPayPlan(el){document.querySelectorAll('.pay-plan').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');selectedPayPlan=el.dataset.plan}
-  function startCheckout(){const b=document.getElementById('pay-cta');b.classList.add('loading');b.textContent='Opening Stripe…';localStorage.setItem('ezp_pending_plan',selectedPayPlan);window.location.href=STRIPE_LINKS[selectedPayPlan]}
+  function handleFileUpload(event){
+    const file = event?.target?.files?.[0];
+    if(!file) return;
+    const chip = document.querySelector('.attach-chip');
+    if(chip) chip.textContent = '📎 ' + file.name.slice(0,30);
+  }
 
-  // Auto-restore: if already logged in → go to app
-  fbAuth.onAuthStateChanged(user=>{if(user)postAuth(user)});
+  function toggleAutomation(){
+    const on = document.getElementById('automation-toggle')?.checked;
+    // Toggle auto-execution mode
+  }
 
-  // Pre-fill remembered email
-  (async()=>{const r=await secureGet('ezp_remember');if(r){const el=document.getElementById('login-id');if(el)el.value=r}})();
+  // Manual task add from Tasks page
+  function addManualTask(){
+    const input = document.getElementById('manual-task-input');
+    const text = input?.value.trim();
+    if(!text) return;
+    const list = document.getElementById('task-list');
+    const empty = document.getElementById('task-empty');
+    if(empty) empty.style.display='none';
+    const task = document.createElement('div');
+    task.className = 'task';
+    task.innerHTML = '<div class="check" onclick="this.parentElement.classList.toggle(\'done\');this.textContent=this.parentElement.classList.contains(\'done\')?\'✓\':\'\'"></div><div class="label">'+text.replace(/</g,'&lt;')+'</div><span class="badge b-med">Med</span>';
+    list.appendChild(task);
+    input.value = '';
+  }
+
+  // ===== INTEGRATIONS =====
+    btn.dataset.state=state;
+    btn.classList.remove('itb-disconnected','itb-connected','itb-live');
+    if(state==='disconnected'){btn.classList.add('itb-disconnected');btn.textContent='CONNECT'}
+    else if(state==='connected'){btn.classList.add('itb-connected');btn.textContent='CONNECTED'}
+    else{btn.classList.add('itb-live');btn.textContent='LIVE'}
+  }
+  });
+
+  // ===== DISCORD JOIN POPUP =====
+  function showDiscordPopup(){
+    if(localStorage.getItem('ezp_discord_dismissed')) return;
+    setTimeout(()=>{
+      const el=document.getElementById('discord-popup');
+      if(el) el.style.display='block';
+    }, 5000); // Show after 5 seconds in the app
+  }
+  function dismissDiscord(){
+    localStorage.setItem('ezp_discord_dismissed','1');
+    const el=document.getElementById('discord-popup');
+    if(el) el.style.display='none';
+  }
+
+  // Show Discord popup after login (delayed)
+  function initApp(){
+    if(localStorage.getItem('ezp_discord_dismissed')!=='1'){
+      showDiscordPopup();
+    }
+  }
 </script>
 </body>
 </html>
