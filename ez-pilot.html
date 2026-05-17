@@ -73,18 +73,7 @@
 
   .app{display:flex;height:100vh;width:100vw}
 
-  /* ===== LOGIN OVERLAY ===== */
   @keyframes fade{from{opacity:0}to{opacity:1}}
-  @keyframes logoIn{from{opacity:0;transform:translateY(-8px) scale(.85)}to{opacity:1;transform:none}}
-    width:100%;background:var(--yellow);color:var(--ink);
-    border:1px solid var(--yellow-deep);
-    padding:14px;border-radius:12px;font-weight:800;font-size:14px;margin-top:6px;
-    transition:transform .12s;
-  }
-  .terms-check{display:flex;align-items:flex-start;gap:9px;margin:10px 0 6px;font-size:12px;color:var(--muted);text-align:left;cursor:pointer}
-  .terms-check input{margin-top:3px;width:16px;height:16px;accent-color:var(--yellow-deep);flex-shrink:0;cursor:pointer}
-  .terms-check span{line-height:1.45}
-  .terms-check a{color:var(--yellow-deep);font-weight:700;text-decoration:underline}
 
   /* Upload + attachments + Make workflow badge */
   .attach-chip{
@@ -145,60 +134,7 @@
   .chat-empty h3{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em}
   .chat-empty p{font-size:14px;margin-top:8px;max-width:400px;line-height:1.5}
 
-  /* Login error + loading */
-    background:#fee2e2;color:#991b1b;border:1px solid #fecaca;
-    padding:10px 14px;border-radius:10px;font-size:12px;font-weight:600;
-    margin-bottom:10px;display:none;animation:shake .3s;
-  }
-  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-    content:"";width:14px;height:14px;margin-left:8px;
-    border:2px solid #fff;border-top-color:transparent;border-radius:50%;
-    display:inline-block;vertical-align:middle;animation:spin .7s linear infinite;
-  }
   @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* ===== PAYMENT GATE OVERLAY ===== */
-    position:fixed;inset:0;z-index:999;
-    background:linear-gradient(135deg,#fff,#fff8d8 50%,#fff 100%);
-    display:none;align-items:center;justify-content:center;padding:20px;
-    overflow-y:auto;
-  }
-    width:520px;max-width:100%;background:#fff;border:1px solid var(--line);
-    border-radius:24px;padding:42px 44px;
-    box-shadow:0 30px 80px rgba(0,0,0,.12);
-  }
-    background:linear-gradient(135deg,#fff7b8,#ffe66b);
-    border:1px dashed var(--yellow-deep);border-radius:12px;
-    padding:14px 16px;margin-bottom:20px;text-align:center;
-    font-size:13px;color:#5a4a00;font-weight:600;line-height:1.5;
-  }
-    border:2px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;
-    transition:all .15s;text-align:center;
-  }
-    background:#fef3c7;border:1px solid #fde68a;color:#92400e;
-    padding:11px 14px;border-radius:10px;font-size:12px;margin-bottom:16px;
-    display:flex;align-items:flex-start;gap:9px;line-height:1.5;
-  }
-    width:100%;background:var(--ink);color:#fff;
-    padding:14px;border-radius:12px;font-weight:800;font-size:14px;
-    border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
-    transition:all .15s;
-  }
-    content:"";width:14px;height:14px;margin-left:6px;
-    border:2px solid #fff;border-top-color:transparent;border-radius:50%;
-    display:inline-block;animation:spin .7s linear infinite;
-  }
-    display:inline-flex;align-items:center;gap:6px;margin-top:12px;
-    font-size:11px;color:var(--muted-2);font-weight:600;
-    text-align:center;justify-content:center;width:100%;
-  }
-    font-size:11px;color:var(--muted-2);text-align:center;margin-top:14px;line-height:1.5;
-  }
-    background:#fff;border:1px solid var(--line);
-    border-radius:12px;padding:12px;font-size:12px;font-weight:700;
-    display:flex;align-items:center;justify-content:center;gap:8px;
-    transition:all .12s;
-  }
 
   /* ===== SIDEBAR ===== */
   .sidebar{width:230px;flex-shrink:0;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:22px 16px;background:#fff}
@@ -416,6 +352,19 @@
   </symbol>
 </svg>
 
+
+<!-- Discord Join Popup -->
+<div class="discord-popup" id="discord-popup" style="display:none;position:fixed;bottom:24px;right:24px;z-index:200">
+  <div style="background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.15);max-width:320px;text-align:center;animation:fade .3s">
+    <div style="width:48px;height:48px;border-radius:12px;background:#5865f2;color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:22px;font-weight:800">D</div>
+    <div style="font-size:17px;font-weight:800">Join our Discord</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5">Get help, share feedback, and connect with other EZ Pilot users.</div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <a href="https://discord.gg/KRPjz3m6" target="_blank" rel="noopener" style="flex:1;padding:11px;background:#5865f2;color:#fff;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;display:block">Join Discord</a>
+      <button onclick="dismissDiscord()" style="flex:1;padding:11px;background:#f5f5f5;color:var(--ink);border:1px solid var(--line);border-radius:10px;font-weight:600;font-size:13px;cursor:pointer">Skip</button>
+    </div>
+  </div>
+</div>
 
 <div class="app">
   <!-- ===== SIDEBAR ===== -->
@@ -901,21 +850,28 @@
   async function sP(uid,d){ await secureSet('ezp_p_'+uid, JSON.stringify(d)); }
 
 
-  // ===== SESSION GUARD — redirect to signin.html if not authed =====
+  // ===== SESSION CHECK — non-blocking =====
+  let _currentUser = null;
   (async function(){
     const user = await secureGetJSON('ezp_user');
-    if(!user || !user.uid){
-      window.location.href = 'signin.html';
-      return;
+    if(user && user.uid){
+      _currentUser = user;
+    }
+    // If Firebase is loaded, also listen for auth state
+    if(typeof fbAuth !== 'undefined'){
+      fbAuth.onAuthStateChanged(u => {
+        if(u) _currentUser = {uid:u.uid, identifier:u.email||u.phoneNumber||''};
+      });
     }
   })();
 
-  // Session-aware logout → redirect to signin.html
+  // Logout → clear session
   function logout(){
-    fbAuth.signOut().catch(()=>{});
+    if(typeof fbAuth !== 'undefined') fbAuth.signOut().catch(()=>{});
     secureRemove('ezp_token');
     secureRemove('ezp_user');
     secureRemove('ezp_remember');
+    _currentUser = null;
     window.location.href = 'signin.html';
   }
 
@@ -929,6 +885,16 @@
       window.history.replaceState({},'',window.location.pathname);
     }
   })();
+
+  // ===== NAVIGATION =====
+  const navItems = document.querySelectorAll('.nav-item');
+  const screens = document.querySelectorAll('.screen');
+  function goTo(id){
+    screens.forEach(s => s.classList.toggle('active', s.id === id));
+    navItems.forEach(n => n.classList.toggle('active', n.dataset.screen === id));
+    document.querySelector('.main').scrollTop = 0;
+  }
+  navItems.forEach(n => n.addEventListener('click', () => goTo(n.dataset.screen)));
 
   // ===== PRICING TOGGLE =====
   let isAnnual=true;
@@ -1213,6 +1179,18 @@
     goTo('chat');
     chatInput.value = text;
     setTimeout(sendMsg, 100);
+  }
+
+  function handleFileUpload(event){
+    const file = event?.target?.files?.[0];
+    if(!file) return;
+    const chip = document.querySelector('.attach-chip');
+    if(chip) chip.textContent = '📎 ' + file.name.slice(0,30);
+  }
+
+  function toggleAutomation(){
+    const on = document.getElementById('automation-toggle')?.checked;
+    // Toggle auto-execution mode
   }
 
   // Manual task add from Tasks page
